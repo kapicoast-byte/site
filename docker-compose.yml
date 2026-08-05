@@ -1,6 +1,20 @@
-# Local development stack. Dokploy does not need this file — it builds the
-# Dockerfile and provides its own Postgres — but it lets you run the whole
-# thing on your laptop with one command:  docker compose up
+# The deployable stack. Dokploy builds this directly when the app is set up as
+# a "Docker Compose" application pointed at this repo — it runs exactly
+# `docker compose -f ./docker-compose.yml up -d --build`, nothing more.
+#
+# Neither service publishes a port to the host. That is deliberate, not an
+# oversight: a fixed host-port bind is what caused a real failure —
+# "Bind for 0.0.0.0:3000 failed: port is already allocated" — because some
+# other container on the same shared server already held 3000. Dokploy's own
+# reverse proxy (Traefik) reaches `web` over the internal Docker network by
+# service name and container port, which it learns from the app's Domains
+# settings in the dashboard, not from a `ports:` entry here. The same class of
+# collision applies to Postgres on 5432, so it is unpublished too.
+#
+# For local development, `docker-compose.override.yml` adds the port
+# publishing back — `docker compose up` (no `-f` flags) merges it in
+# automatically, but Dokploy's explicit `-f ./docker-compose.yml` does not, so
+# it never reaches production.
 services:
   db:
     image: postgres:16-alpine
@@ -11,8 +25,8 @@ services:
       POSTGRES_DB: kapicoast
     volumes:
       - db-data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
+    expose:
+      - "5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U kapi -d kapicoast"]
       interval: 5s
@@ -27,15 +41,19 @@ services:
         condition: service_healthy
     environment:
       DATABASE_URL: postgresql://kapi:kapi@db:5432/kapicoast?schema=public
-      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@kapicoast.in}
-      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-changeme123}
-      SESSION_SECRET: ${SESSION_SECRET:-dev-secret-please-change-me-32chars}
+      # Login is Firebase Auth now — no local password or session secret left
+      # to default here. Export these in your shell before `docker compose up`,
+      # or the admin panel will refuse every sign-in attempt.
+      ADMIN_EMAIL: ${ADMIN_EMAIL:?set ADMIN_EMAIL before starting}
+      FIREBASE_SERVICE_ACCOUNT: ${FIREBASE_SERVICE_ACCOUNT:?set FIREBASE_SERVICE_ACCOUNT before starting}
+      FIREBASE_WEB_API_KEY: ${FIREBASE_WEB_API_KEY:?set FIREBASE_WEB_API_KEY before starting}
+      FIREBASE_STORAGE_BUCKET: ${FIREBASE_STORAGE_BUCKET:-}
       UPLOAD_DIR: /app/uploads
       SITE_URL: ${SITE_URL:-http://localhost:3000}
     volumes:
       - uploads:/app/uploads
-    ports:
-      - "3000:3000"
+    expose:
+      - "3000"
 
 volumes:
   db-data:

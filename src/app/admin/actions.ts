@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
-import { requireAdmin, verifyCredentials, createSession, destroySession } from "@/lib/auth";
+import { requireAdmin, attemptLogin, destroySession } from "@/lib/auth";
 import { saveUpload, deleteUpload, UploadError } from "@/lib/uploads";
 import { takeLoginAttempt, clearLoginAttempts } from "@/lib/ratelimit";
 import type { Prisma } from "@prisma/client";
@@ -46,13 +46,16 @@ export async function loginAction(_prev: unknown, form: FormData): Promise<Actio
   const email = str(form, "email");
   const password = String(form.get("password") ?? "");
 
-  if (!(await verifyCredentials(email, password))) {
+  // attemptLogin checks the password against Firebase Auth, confirms the
+  // account is the allowlisted admin, and — only on success — mints the
+  // session cookie itself. One call, so there is no window where a password
+  // was verified but no session was created.
+  if (!(await attemptLogin(email, password))) {
     // Deliberately vague: don't reveal which half was wrong.
     return { error: "That email and password don't match." };
   }
 
   await clearLoginAttempts();
-  await createSession(email);
   redirect("/admin");
 }
 

@@ -1,0 +1,17 @@
+# Local-only convenience: publishes both services to your machine so
+# `docker compose up` gives you http://localhost:3000 and a psql-reachable
+# Postgres on 5432 immediately.
+#
+# `docker compose` merges this automatically whenever it is run without an
+# explicit `-f` list, which is the normal local workflow. Dokploy's deploy
+# command passes `-f ./docker-compose.yml` explicitly, so this file is never
+# part of what runs in production — it cannot be what caused a host port
+# collision there.
+services:
+  db:
+    ports:
+      - "5432:5432"
+
+  web:
+    ports:
+      - "3000:3000"

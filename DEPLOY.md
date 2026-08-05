@@ -21,41 +21,16 @@ nothing to commit.
 
 ---
 
-## 2. Make the two secrets
+## 2. Firebase — the service account, and the admin login
 
-**Session secret** — any long random string. Generate one:
+Login is Firebase Authentication now. There is no password or session secret
+in this app's own configuration anymore; both live in Firebase, and this app
+only ever asks Firebase to check them.
 
-```bash
-node -e "console.log(require('crypto').randomBytes(48).toString('base64'))"
-```
-
-**Admin password** — hash it so a leaked env var doesn't hand over the account:
-
-```bash
-node scripts/hash-password.mjs
-```
-
-Type your password when asked; it prints an `ADMIN_PASSWORD=$2b$...` line. The
-password itself never touches a file or your shell history. Keep it in a password
-manager — there is no reset link, and no second account to let you back in.
-
----
-
-## 3. Create the Postgres service in Dokploy
-
-Dokploy → **Databases → Create → PostgreSQL**. Note the connection string it
-gives you; it becomes `DATABASE_URL`.
-
----
-
-## 3b. Firebase Storage (for uploaded photos)
-
-Optional, but it is what stops a lost disk volume taking every photo with it.
-
-**Firebase Console → Project settings → Service accounts → Generate new private key.**
-That downloads a JSON file. It is a real secret: it bypasses every Firebase
-security rule and works from anywhere. Never commit it — `.gitignore` already
-refuses the usual filenames.
+**a) Get a service account key.** Firebase Console → Project settings →
+Service accounts → Generate new private key. That downloads a JSON file. It is
+a real secret: it bypasses every Firebase security rule and works from
+anywhere. Never commit it — `.gitignore` already refuses the usual filenames.
 
 Base64 it, because the private key inside contains newlines that environment
 variable fields mangle:
@@ -68,33 +43,65 @@ base64 -w0 service-account.json
 [Convert]::ToBase64String([IO.File]::ReadAllBytes("service-account.json"))
 ```
 
-Add to Dokploy:
+That becomes `FIREBASE_SERVICE_ACCOUNT`.
 
-| Variable | Value |
-| --- | --- |
-| `FIREBASE_SERVICE_ACCOUNT` | the base64 string |
-| `FIREBASE_STORAGE_BUCKET` | e.g. `your-project.appspot.com` |
+**b) Get the Web API key.** Firebase Console → Project settings → General →
+Web API Key. This one is a project identifier, not a secret — the same value a
+client app would ship publicly — but it stays server-side here regardless,
+consistent with everything else Firebase-related on this site. That becomes
+`FIREBASE_WEB_API_KEY`.
+
+**c) Turn on Email/Password sign-in.** Firebase Console → Authentication →
+Sign-in method → enable **Email/Password**. Off by default on a new project;
+login fails with every password correct until this is on.
+
+**d) Create the admin account.** With `FIREBASE_SERVICE_ACCOUNT` and
+`ADMIN_EMAIL` set in `.env` (or exported in your shell):
+
+```bash
+node scripts/set-admin-user.mjs
+```
+
+Type the password when asked. It goes straight to Firebase over TLS and is
+never written to a file or your shell history. Keep it in a password manager —
+there is no reset link, and no second account to let you back in. Run the same
+command again any time to change it.
+
+---
+
+## 3. Create the Postgres service in Dokploy
+
+Dokploy → **Databases → Create → PostgreSQL**. Note the connection string it
+gives you; it becomes `DATABASE_URL`.
+
+---
+
+## 3b. Firebase Storage (for uploaded photos) — optional
+
+Stops a lost disk volume taking every photo with it. Uses the same service
+account from step 2 — nothing new to generate.
+
+Add one more variable in Dokploy: `FIREBASE_STORAGE_BUCKET`, e.g.
+`your-project.firebasestorage.app`.
 
 **Leave the bucket private.** Do not add public read rules. Files are proxied
 through `/api/uploads/<name>`, so nothing needs direct access and no Google URL
 ever appears in the page.
 
-Nothing else changes: the stored filenames and the public URLs are identical to
-the disk version, so anything already uploaded keeps working.
-
-With both variables set, uploads go to the bucket. With either missing, they go
-to `UPLOAD_DIR` on disk — which is how local development runs, with no Firebase
-account needed.
+With it set, uploads go to the bucket. Without it, they go to `UPLOAD_DIR` on
+disk — which is how local development runs unless you configure it too.
 
 ### Why there is no Firebase config in the browser
 
-The Firebase *client* SDK is not used anywhere in this project. Its config —
-`apiKey`, `authDomain`, `projectId` — is public by design and ships inside the
-JavaScript bundle for anyone to read in DevTools. Using the Admin SDK
-server-side instead means none of it exists client-side at all.
+The Firebase *client* SDK is not used anywhere in this project — not for
+Storage, and not for login either. Its config — `apiKey`, `authDomain`,
+`projectId` — is public by design and ships inside the JavaScript bundle for
+anyone to read in DevTools. Using the Admin SDK server-side instead, and
+checking passwords via a server-to-server call to Identity Toolkit, means none
+of it exists client-side at all.
 
-This is verifiable, not a promise. Build with a throwaway credential and search
-the browser bundle:
+This is verifiable, not a promise. Build with the real credentials set and
+search the browser bundle:
 
 ```bash
 grep -rl "BEGIN PRIVATE KEY" .next/static | wc -l   # 0
@@ -113,13 +120,12 @@ Dokploy → **Applications → Create**, point it at the GitHub repo, build type
 | Variable | Value |
 | --- | --- |
 | `DATABASE_URL` | from step 3 |
-| `ADMIN_EMAIL` | your login address |
-| `ADMIN_PASSWORD` | the `$2b$...` hash from step 2 |
-| `SESSION_SECRET` | the random string from step 2 |
+| `ADMIN_EMAIL` | your login address (see step 2) |
+| `FIREBASE_SERVICE_ACCOUNT` | base64 service-account JSON (see step 2) |
+| `FIREBASE_WEB_API_KEY` | from step 2 |
+| `FIREBASE_STORAGE_BUCKET` | `your-project.firebasestorage.app` (see step 3b) — omit to use disk instead |
 | `UPLOAD_DIR` | `/app/uploads` |
 | `SITE_URL` | `https://your-real-domain` |
-| `FIREBASE_SERVICE_ACCOUNT` | base64 service-account JSON (see 3b) |
-| `FIREBASE_STORAGE_BUCKET` | `your-project.appspot.com` (see 3b) |
 
 `SITE_URL` matters more than it looks: `sitemap.xml`, `robots.txt` and
 `llms.txt` all emit absolute URLs. Get it wrong and you hand Google a sitemap
