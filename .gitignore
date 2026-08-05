@@ -1,0 +1,21 @@
+node_modules/
+.next/
+out/
+build/
+.env
+.env.local
+*.log
+.DS_Store
+next-env.d.ts
+/uploads/*
+!/uploads/.gitkeep
+tsconfig.tsbuildinfo
+.env*
+!.env.example
+.pgdata/
+
+# Firebase service-account keys — never commit these. They bypass every
+# security rule and work from anywhere.
+service-account*.json
+serviceAccount*.json
+*-firebase-adminsdk-*.json

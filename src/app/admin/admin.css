@@ -1,0 +1,317 @@
+/* Admin panel — deliberately plain. It borrows the site's palette but none of
+   its display type, so editing never feels like browsing. */
+
+.adm {
+  --pad: 1.5rem;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  background: var(--ink);
+  color: var(--cream);
+  font-family: var(--f-body);
+}
+@media (max-width: 860px) {
+  .adm { grid-template-columns: 1fr; }
+}
+
+.adm__side {
+  border-right: 1px solid var(--line);
+  padding: 1.25rem 1rem;
+  display: flex; flex-direction: column; gap: .3rem;
+  position: sticky; top: 0; height: 100vh;
+}
+@media (max-width: 860px) {
+  .adm__side { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--line); }
+}
+.adm__brand {
+  display: flex; align-items: center; gap: .6rem;
+  padding-bottom: 1.1rem; margin-bottom: .6rem;
+  border-bottom: 1px solid var(--line);
+}
+.adm__brand img { width: 36px; height: 36px; }
+.adm__brand b { font-size: .9rem; letter-spacing: .04em; }
+.adm__brand small { display: block; font-size: .68rem; color: var(--cream-dim); }
+
+.adm__nav a {
+  display: block; padding: .6rem .7rem; border-radius: 8px;
+  font-size: .9rem; color: var(--cream-dim);
+  transition: background .2s, color .2s;
+}
+.adm__nav a:hover { background: var(--ink-2); color: var(--cream); }
+.adm__nav a.is-on { background: rgba(255,198,60,.12); color: var(--gold); font-weight: 700; }
+.adm__spacer { flex: 1; }
+
+.adm__main { padding: var(--pad); max-width: 1100px; }
+.adm__head {
+  display: flex; flex-wrap: wrap; gap: 1rem;
+  align-items: center; justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+.adm__head h1 { font-family: var(--f-body); font-size: 1.5rem; font-weight: 700; letter-spacing: -.01em; }
+.adm__head p { color: var(--cream-dim); font-size: .9rem; margin-top: .2rem; }
+
+.adm-card {
+  background: var(--ink-2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1.2rem;
+  margin-bottom: 1rem;
+}
+.adm-card > h2 {
+  font-family: var(--f-body); font-size: .72rem; font-weight: 700;
+  letter-spacing: .22em; text-transform: uppercase; color: var(--gold);
+  margin-bottom: 1rem;
+}
+
+/* ------------------------------------------------------------- cropper -- */
+
+.crop {
+  position: fixed; inset: 0; z-index: 200;
+  display: grid; place-items: center;
+  padding: 1.2rem;
+  background: rgba(8, 6, 4, .78);
+  backdrop-filter: blur(6px);
+}
+.crop__panel {
+  width: min(900px, 100%); max-height: 100%;
+  display: flex; flex-direction: column;
+  background: var(--ink-2);
+  border: 1px solid var(--line); border-radius: 14px;
+  overflow: hidden;
+}
+.crop__head {
+  display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem;
+  padding: 1.1rem 1.2rem .9rem;
+  border-bottom: 1px solid var(--line);
+}
+.crop__head h3 { font-family: var(--f-display); font-size: 1.35rem; color: var(--cream); }
+.crop__head p { margin-top: .25rem; font-size: .82rem; color: var(--cream-dim); }
+
+.crop__ratios { display: flex; gap: .5rem; flex-wrap: wrap; align-items: stretch; padding: .9rem 1.2rem; }
+.crop__sep { width: 1px; background: var(--line); margin-inline: .3rem; }
+.crop__turn {
+  display: grid; place-items: center;
+  width: 44px; border-radius: 8px;
+  border: 1px solid var(--line); background: none; color: var(--cream-dim);
+  transition: .2s;
+}
+.crop__turn:hover { color: var(--ink); background: var(--gold); border-color: var(--gold); }
+.crop__turn svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.crop__ratio {
+  display: grid; gap: .1rem; text-align: left;
+  padding: .5rem .8rem; border-radius: 8px;
+  border: 1px solid var(--line); background: none; color: var(--cream-dim);
+  transition: .2s;
+}
+.crop__ratio b { font-size: .88rem; color: var(--cream); }
+.crop__ratio span { font-size: .7rem; letter-spacing: .06em; text-transform: uppercase; }
+.crop__ratio:hover { border-color: var(--cream-dim); }
+.crop__ratio.is-on { border-color: var(--gold); background: rgba(255, 198, 60, .1); }
+.crop__ratio.is-on b { color: var(--gold); }
+
+.crop__stage {
+  position: relative; flex: 1; min-height: 0;
+  display: grid; place-items: center;
+  padding: 0 1.2rem 1rem;
+  overflow: hidden;
+  /* Checkerboard, so a photo with pale edges still reads against the panel. */
+  background-image:
+    linear-gradient(45deg, #1c1712 25%, transparent 25%, transparent 75%, #1c1712 75%),
+    linear-gradient(45deg, #1c1712 25%, transparent 25%, transparent 75%, #1c1712 75%);
+  background-size: 18px 18px;
+  background-position: 0 0, 9px 9px;
+}
+.crop__stage img {
+  display: block; max-width: 100%; max-height: 52vh;
+  width: auto; height: auto;
+  user-select: none; -webkit-user-drag: none;
+}
+
+/* Shrink-wraps the image: the crop box is positioned against this, so its
+   percentages map straight onto the photo regardless of stage padding. */
+.crop__canvas { position: relative; display: inline-block; line-height: 0; max-width: 100%; }
+
+.crop__box {
+  position: absolute;
+  border: 2px solid var(--gold);
+  box-shadow: 0 0 0 9999px rgba(8, 6, 4, .55);
+  cursor: move; touch-action: none;
+}
+.crop__box:focus-visible { outline: 2px solid var(--milk); outline-offset: 2px; }
+/* Rule-of-thirds guides. */
+.crop__box::before, .crop__box::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background-repeat: no-repeat;
+}
+.crop__box::before {
+  background-image: linear-gradient(90deg, rgba(244,232,213,.3) 1px, transparent 1px);
+  background-size: 33.333% 100%;
+  background-position: 33.333% 0;
+}
+.crop__box::after {
+  background-image: linear-gradient(180deg, rgba(244,232,213,.3) 1px, transparent 1px);
+  background-size: 100% 33.333%;
+  background-position: 0 33.333%;
+}
+/* Where the square menu-card thumbnail will cut from this crop. */
+.crop__thumbguide {
+  position: absolute; top: 0; bottom: 0; left: 50%; translate: -50% 0;
+  aspect-ratio: 1; pointer-events: none;
+  border: 1px dashed rgba(244, 232, 213, .45);
+}
+.crop__h {
+  position: absolute; width: 20px; height: 20px;
+  background: var(--gold); border-radius: 3px;
+  touch-action: none;
+}
+.crop__h--nw { top: -10px; left: -10px; cursor: nwse-resize; }
+.crop__h--ne { top: -10px; right: -10px; cursor: nesw-resize; }
+.crop__h--sw { bottom: -10px; left: -10px; cursor: nesw-resize; }
+.crop__h--se { bottom: -10px; right: -10px; cursor: nwse-resize; }
+
+.crop__foot {
+  display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+  flex-wrap: wrap;
+  padding: .9rem 1.2rem 1.1rem;
+  border-top: 1px solid var(--line);
+}
+.crop__actions { display: flex; gap: .5rem; flex-wrap: wrap; }
+
+@media (max-width: 640px) {
+  .crop { padding: 0; }
+  .crop__panel { border-radius: 0; height: 100%; }
+  .crop__stage img { max-height: 42vh; }
+  .crop__foot, .crop__actions { width: 100%; }
+  .crop__actions .adm-btn { flex: 1; }
+}
+
+/* Search box above a long admin list. */
+.adm-search {
+  display: flex; align-items: center; gap: .6rem;
+  border: 1px solid var(--line); border-radius: 10px;
+  padding: .6rem .85rem; min-height: 44px;
+  background: var(--ink);
+  transition: border-color .2s;
+}
+.adm-search:focus-within { border-color: var(--gold); }
+.adm-search svg { width: 16px; height: 16px; opacity: .55; flex: none; }
+.adm-search input {
+  flex: 1; min-width: 0;
+  background: none; border: 0; outline: 0;
+  color: var(--cream); font: inherit; font-size: .92rem;
+}
+.adm-search input::placeholder { color: var(--cream-dim); }
+/* The type-in-search "x" Chrome adds is invisible on a dark field. */
+.adm-search input::-webkit-search-cancel-button { display: none; }
+.adm-search__x {
+  flex: none; width: 24px; height: 24px; border-radius: 100px;
+  display: grid; place-items: center;
+  font-size: 1.1rem; line-height: 1; color: var(--cream-dim);
+  border: 1px solid var(--line); background: none;
+}
+.adm-search__x:hover { color: var(--ink); background: var(--gold); border-color: var(--gold); }
+.adm-search__count {
+  margin: .6rem 0 0; font-size: .78rem; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--cream-dim);
+}
+.adm-empty { padding: 2.2rem .4rem; text-align: center; color: var(--cream-dim); font-size: .92rem; }
+
+.adm-grid { display: grid; gap: .9rem; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+
+.adm-field { display: grid; gap: .35rem; }
+.adm-field label { font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--cream-dim); font-weight: 700; }
+.adm-field input, .adm-field textarea, .adm-field select {
+  background: var(--ink); color: var(--cream);
+  border: 1px solid var(--line); border-radius: 8px;
+  padding: .6rem .7rem; font-size: .92rem; outline: 0; width: 100%;
+}
+.adm-field input:focus, .adm-field textarea:focus, .adm-field select:focus {
+  border-color: var(--gold); box-shadow: 0 0 0 3px rgba(255,198,60,.14);
+}
+.adm-field textarea { min-height: 90px; resize: vertical; font-family: inherit; }
+.adm-field .hint { font-size: .74rem; color: var(--cream-dim); }
+@media (max-width: 900px) {
+  .adm-field input, .adm-field textarea, .adm-field select { font-size: 16px; }
+}
+
+.adm-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .45em;
+  background: var(--gold); color: var(--ink);
+  border-radius: 8px; padding: .6rem 1.1rem; min-height: 42px;
+  font-weight: 700; font-size: .85rem; border: 1px solid transparent;
+  cursor: pointer; transition: filter .2s, background .2s;
+}
+.adm-btn:hover { filter: brightness(1.08); }
+.adm-btn--ghost { background: transparent; color: var(--cream); border-color: var(--line); }
+.adm-btn--ghost:hover { background: var(--ink-3); }
+.adm-btn--danger { background: var(--kumkum); color: var(--milk); }
+
+.adm-table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+.adm-table th {
+  text-align: left; font-size: .68rem; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--cream-dim);
+  padding: .5rem .6rem; border-bottom: 1px solid var(--line);
+}
+.adm-table td { padding: .7rem .6rem; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.adm-table tr:hover td { background: var(--ink-3); }
+.adm-table .num { text-align: right; white-space: nowrap; }
+.adm-wrapx { overflow-x: auto; }
+
+.adm-tag {
+  display: inline-block; font-size: .64rem; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase;
+  padding: .18rem .5rem; border-radius: 100px;
+  border: 1px solid var(--line); color: var(--cream-dim);
+}
+.adm-tag--on { color: #7FBF6A; border-color: rgba(127,191,106,.4); }
+.adm-tag--off { color: var(--kumkum-lit); border-color: rgba(232,89,63,.4); }
+
+.adm-note {
+  border: 1px solid rgba(255,198,60,.3); background: rgba(255,198,60,.07);
+  border-radius: 8px; padding: .8rem 1rem; font-size: .88rem; margin-bottom: 1rem;
+}
+.adm-err {
+  border: 1px solid rgba(232,89,63,.45); background: rgba(232,89,63,.1);
+  border-radius: 8px; padding: .8rem 1rem; font-size: .88rem; margin-bottom: 1rem;
+  color: #FFC9BE;
+}
+
+/* Media library */
+.adm-media { display: grid; gap: .8rem; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+.adm-media figure {
+  border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--ink);
+}
+.adm-media img, .adm-media video { width: 100%; height: 110px; object-fit: cover; display: block; background: #000; }
+.adm-media figcaption { padding: .5rem .6rem; font-size: .7rem; color: var(--cream-dim); word-break: break-all; }
+.adm-media .row { display: flex; gap: .35rem; padding: 0 .6rem .6rem; }
+.adm-media .row button, .adm-media .row a {
+  font-size: .68rem; padding: .3rem .5rem; border-radius: 6px;
+  border: 1px solid var(--line); background: transparent; color: var(--cream-dim); cursor: pointer;
+}
+.adm-media .row button:hover { color: var(--cream); }
+
+/* Login */
+.adm-login {
+  min-height: 100vh; display: grid; place-items: center;
+  background: var(--ink); padding: 1.5rem;
+}
+.adm-login form {
+  width: min(400px, 100%); background: var(--ink-2);
+  border: 1px solid var(--line); border-radius: 14px; padding: 1.8rem;
+  display: grid; gap: 1rem;
+}
+.adm-login img { width: 56px; height: 56px; margin-bottom: .4rem; }
+.adm-login h1 { font-family: var(--f-body); font-size: 1.2rem; font-weight: 700; }
+.adm-login p { font-size: .85rem; color: var(--cream-dim); }
+
+/* Dish photo picker */
+.adm-photo {
+  display: flex; gap: .8rem; align-items: flex-start;
+  margin-bottom: .6rem;
+}
+.adm-photo img {
+  width: 96px; height: 96px; object-fit: cover; flex: none;
+  border-radius: 8px; border: 1px solid var(--line); background: var(--ink);
+}
+.adm-photo > div { display: grid; gap: .4rem; align-content: start; }
+.adm-photo .adm-btn { padding: .35rem .8rem; min-height: 0; font-size: .74rem; }

@@ -1,0 +1,1509 @@
+{
+ "cafe": {
+  "name": "Kapi Coast",
+  "tamil": "காபி கோஸ்ட்",
+  "tagline": "Café & snacks · coastal flavours",
+  "phone": "+91 73822 19403",
+  "whatsapp": "917382219403",
+  "email": "",
+  "addressLines": [
+   "105, OMR Road, Kazhipattur Village",
+   "Vaniyanchavadi, Kalipattur",
+   "Chennai, Tamil Nadu 603103"
+  ],
+  "mapsQuery": "105, OMR Rd, Kazhipattur Village, Vaniyanchavadi, Kalipattur, Chennai, Tamil Nadu 603103",
+  "hours": [
+   {
+    "day": "Monday",
+    "time": "6:00 am – 10:00 pm"
+   },
+   {
+    "day": "Tuesday",
+    "time": "6:00 am – 10:00 pm"
+   },
+   {
+    "day": "Wednesday",
+    "time": "6:00 am – 10:00 pm"
+   },
+   {
+    "day": "Thursday",
+    "time": "6:00 am – 10:00 pm"
+   },
+   {
+    "day": "Friday",
+    "time": "6:00 am – 10:00 pm"
+   },
+   {
+    "day": "Saturday",
+    "time": "6:00 am – 10:00 pm"
+   },
+   {
+    "day": "Sunday",
+    "time": "6:00 am – 10:00 pm"
+   }
+  ]
+ },
+ "categories": [
+  {
+   "id": "hot-drinks",
+   "label": "Hot Drinks",
+   "order": 0
+  },
+  {
+   "id": "cold-drinks",
+   "label": "Cold Drinks",
+   "order": 1
+  },
+  {
+   "id": "fresh-juice",
+   "label": "Fresh Juice",
+   "order": 2
+  },
+  {
+   "id": "milkshakes",
+   "label": "Milkshakes",
+   "order": 3
+  },
+  {
+   "id": "andhra-snacks",
+   "label": "Andhra Snacks",
+   "order": 4
+  },
+  {
+   "id": "tiffin",
+   "label": "Tiffin",
+   "order": 5
+  },
+  {
+   "id": "chaat",
+   "label": "Chaat",
+   "order": 6
+  },
+  {
+   "id": "snacks",
+   "label": "Snacks",
+   "order": 7
+  },
+  {
+   "id": "buns",
+   "label": "Buns",
+   "order": 8
+  },
+  {
+   "id": "pizza",
+   "label": "Pizza",
+   "order": 9
+  },
+  {
+   "id": "pasta",
+   "label": "Pasta",
+   "order": 10
+  },
+  {
+   "id": "cookies",
+   "label": "Cookies",
+   "order": 11
+  },
+  {
+   "id": "doughnuts",
+   "label": "Doughnuts",
+   "order": 12
+  },
+  {
+   "id": "dessert",
+   "label": "Dessert",
+   "order": 13
+  }
+ ],
+ "menu": [
+  {
+   "id": "filter-coffee",
+   "cat": "hot-drinks",
+   "name": "Filter Coffee",
+   "tamil": "",
+   "price": 40,
+   "blurb": "South Indian decoction & milk",
+   "accent": "#7A4A1C",
+   "tags": [
+    "veg",
+    "star"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "masala-tea",
+   "cat": "hot-drinks",
+   "name": "Masala Tea",
+   "tamil": "",
+   "price": 35,
+   "blurb": "Spiced milk chai",
+   "accent": "#7A4A1C",
+   "tags": [
+    "veg",
+    "star"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "ginger-tea",
+   "cat": "hot-drinks",
+   "name": "Ginger Tea",
+   "tamil": "",
+   "price": 35,
+   "blurb": "Fresh ginger milk tea",
+   "accent": "#7A4A1C",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "black-coffee",
+   "cat": "hot-drinks",
+   "name": "Black Coffee",
+   "tamil": "",
+   "price": 30,
+   "blurb": "Bold brewed, no milk",
+   "accent": "#7A4A1C",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "black-tea",
+   "cat": "hot-drinks",
+   "name": "Black Tea",
+   "tamil": "",
+   "price": 30,
+   "blurb": "Light brewed, no milk",
+   "accent": "#7A4A1C",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "lemon-honey-tea",
+   "cat": "hot-drinks",
+   "name": "Lemon & Honey Tea",
+   "tamil": "",
+   "price": 30,
+   "blurb": "Soothing lemon & honey",
+   "accent": "#7A4A1C",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "milk",
+   "cat": "hot-drinks",
+   "name": "Milk",
+   "tamil": "",
+   "price": 30,
+   "blurb": "Hot plain milk",
+   "accent": "#7A4A1C",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "horlicks",
+   "cat": "hot-drinks",
+   "name": "Horlicks",
+   "tamil": "",
+   "price": 45,
+   "blurb": "Warm malted milk",
+   "accent": "#7A4A1C",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "boost",
+   "cat": "hot-drinks",
+   "name": "Boost",
+   "tamil": "",
+   "price": 45,
+   "blurb": "Hot chocolate-malt drink",
+   "accent": "#7A4A1C",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "badam-milk",
+   "cat": "hot-drinks",
+   "name": "Badam Milk",
+   "tamil": "",
+   "price": 45,
+   "blurb": "Hot almond-saffron milk",
+   "accent": "#7A4A1C",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "cold-coffee",
+   "cat": "cold-drinks",
+   "name": "Cold Coffee",
+   "tamil": "",
+   "price": 120,
+   "blurb": "Chilled, creamy & lightly sweet",
+   "accent": "#2F4230",
+   "tags": [
+    "veg",
+    "star"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "coke-400-ml",
+   "cat": "cold-drinks",
+   "name": "Coke (400 ml)",
+   "tamil": "",
+   "price": 20,
+   "blurb": "Chilled cola",
+   "accent": "#2F4230",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "fanta-400-ml",
+   "cat": "cold-drinks",
+   "name": "Fanta (400 ml)",
+   "tamil": "",
+   "price": 20,
+   "blurb": "Chilled orange soda",
+   "accent": "#2F4230",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "sprite-400-ml",
+   "cat": "cold-drinks",
+   "name": "Sprite (400 ml)",
+   "tamil": "",
+   "price": 20,
+   "blurb": "Chilled lemon-lime soda",
+   "accent": "#2F4230",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "glass-bottle",
+   "cat": "cold-drinks",
+   "name": "Glass Bottle",
+   "tamil": "",
+   "price": 10,
+   "blurb": "Coke · Fanta · Sprite · Limca",
+   "accent": "#2F4230",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "water-bottle-1-l",
+   "cat": "cold-drinks",
+   "name": "Water Bottle (1 L)",
+   "tamil": "",
+   "price": 20,
+   "blurb": "Packaged drinking water",
+   "accent": "#2F4230",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "watermelon",
+   "cat": "fresh-juice",
+   "name": "Watermelon",
+   "tamil": "",
+   "price": 100,
+   "blurb": "Freshly pressed, no sugar",
+   "accent": "#8C3A57",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "pomegranate",
+   "cat": "fresh-juice",
+   "name": "Pomegranate",
+   "tamil": "",
+   "price": 100,
+   "blurb": "Ruby-red pressed juice",
+   "accent": "#8C3A57",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "apple",
+   "cat": "fresh-juice",
+   "name": "Apple",
+   "tamil": "",
+   "price": 100,
+   "blurb": "Freshly pressed apple",
+   "accent": "#8C3A57",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "orange",
+   "cat": "fresh-juice",
+   "name": "Orange",
+   "tamil": "",
+   "price": 100,
+   "blurb": "Freshly squeezed oranges",
+   "accent": "#8C3A57",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "musk-melon",
+   "cat": "fresh-juice",
+   "name": "Musk Melon",
+   "tamil": "",
+   "price": 100,
+   "blurb": "Sweet, cooling & fresh",
+   "accent": "#8C3A57",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "dragon-fruit",
+   "cat": "fresh-juice",
+   "name": "Dragon Fruit",
+   "tamil": "",
+   "price": 100,
+   "blurb": "Freshly blended dragon fruit",
+   "accent": "#8C3A57",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "pineapple",
+   "cat": "fresh-juice",
+   "name": "Pineapple",
+   "tamil": "",
+   "price": 100,
+   "blurb": "Sweet-tart pressed pineapple",
+   "accent": "#8C3A57",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "oreo",
+   "cat": "milkshakes",
+   "name": "Oreo",
+   "tamil": "",
+   "price": 120,
+   "blurb": "Cookies-and-cream, blended thick",
+   "accent": "#6A2E3E",
+   "tags": [
+    "veg",
+    "star"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "lotus-biscoff",
+   "cat": "milkshakes",
+   "name": "Lotus Biscoff",
+   "tamil": "",
+   "price": 120,
+   "blurb": "Caramelised biscuit shake",
+   "accent": "#6A2E3E",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "kitkat",
+   "cat": "milkshakes",
+   "name": "KitKat",
+   "tamil": "",
+   "price": 120,
+   "blurb": "Chocolate-wafer shake",
+   "accent": "#6A2E3E",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "chocolate",
+   "cat": "milkshakes",
+   "name": "Chocolate",
+   "tamil": "",
+   "price": 120,
+   "blurb": "Rich cocoa milkshake",
+   "accent": "#6A2E3E",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "vanilla",
+   "cat": "milkshakes",
+   "name": "Vanilla",
+   "tamil": "",
+   "price": 80,
+   "blurb": "Classic creamy vanilla",
+   "accent": "#6A2E3E",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "rose-milk",
+   "cat": "milkshakes",
+   "name": "Rose Milk",
+   "tamil": "",
+   "price": 80,
+   "blurb": "Chilled milk with rose",
+   "accent": "#6A2E3E",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "badam-milk-cold",
+   "cat": "milkshakes",
+   "name": "Badam Milk (Cold)",
+   "tamil": "",
+   "price": 80,
+   "blurb": "Chilled almond-saffron milk",
+   "accent": "#6A2E3E",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "mirchi-bajji",
+   "cat": "andhra-snacks",
+   "name": "Mirchi Bajji",
+   "tamil": "",
+   "price": 15,
+   "blurb": "Long chilli in gram-flour batter",
+   "accent": "#A5432A",
+   "tags": [
+    "veg",
+    "hot",
+    "star"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "medhu-vada",
+   "cat": "andhra-snacks",
+   "name": "Medhu Vada",
+   "tamil": "",
+   "price": 15,
+   "blurb": "Fluffy urad-dal doughnut",
+   "accent": "#A5432A",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "masala-vada",
+   "cat": "andhra-snacks",
+   "name": "Masala Vada",
+   "tamil": "",
+   "price": 15,
+   "blurb": "Spiced chana-dal patty",
+   "accent": "#A5432A",
+   "tags": [
+    "veg",
+    "hot"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "onion-bonda",
+   "cat": "andhra-snacks",
+   "name": "Onion Bonda",
+   "tamil": "",
+   "price": 15,
+   "blurb": "Golden onion-potato fritter",
+   "accent": "#A5432A",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "raw-banana-bajji",
+   "cat": "andhra-snacks",
+   "name": "Raw Banana Bajji",
+   "tamil": "",
+   "price": 15,
+   "blurb": "Plantain in spiced batter",
+   "accent": "#A5432A",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "aloo-bajji",
+   "cat": "andhra-snacks",
+   "name": "Aloo Bajji",
+   "tamil": "",
+   "price": 15,
+   "blurb": "Potato fried golden in batter",
+   "accent": "#A5432A",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "onion-pakoda",
+   "cat": "andhra-snacks",
+   "name": "Onion Pakoda",
+   "tamil": "",
+   "price": 15,
+   "blurb": "Crispy spiced onion fritters",
+   "accent": "#A5432A",
+   "tags": [
+    "veg",
+    "hot"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "samosa",
+   "cat": "andhra-snacks",
+   "name": "Samosa",
+   "tamil": "",
+   "price": 20,
+   "blurb": "Flaky pastry, spiced potato",
+   "accent": "#A5432A",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "french-fries",
+   "cat": "andhra-snacks",
+   "name": "French Fries",
+   "tamil": "",
+   "price": 80,
+   "blurb": "Crisp golden salted fries",
+   "accent": "#A5432A",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "punugulu-14-pc",
+   "cat": "andhra-snacks",
+   "name": "Punugulu (14 pc)",
+   "tamil": "",
+   "price": 50,
+   "blurb": "Fried dosa-batter dumplings",
+   "accent": "#A5432A",
+   "tags": [
+    "veg",
+    "star"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "idly-2",
+   "cat": "tiffin",
+   "name": "Idly (2)",
+   "tamil": "",
+   "price": 45,
+   "blurb": "Steamed cakes, chutney & sambar",
+   "accent": "#94491F",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "idly-vada",
+   "cat": "tiffin",
+   "name": "Idly Vada",
+   "tamil": "",
+   "price": 50,
+   "blurb": "2 idly + 1 vada combo",
+   "accent": "#94491F",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "sambar-idly",
+   "cat": "tiffin",
+   "name": "Sambar Idly",
+   "tamil": "",
+   "price": 50,
+   "blurb": "Idly soaked in hot sambar",
+   "accent": "#94491F",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "sambar-vada",
+   "cat": "tiffin",
+   "name": "Sambar Vada",
+   "tamil": "",
+   "price": 50,
+   "blurb": "Vada soaked in hot sambar",
+   "accent": "#94491F",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "podi-idly",
+   "cat": "tiffin",
+   "name": "Podi Idly",
+   "tamil": "",
+   "price": 50,
+   "blurb": "Tossed in spiced podi & ghee",
+   "accent": "#94491F",
+   "tags": [
+    "veg",
+    "star"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "pani-puri",
+   "cat": "chaat",
+   "name": "Pani Puri",
+   "tamil": "",
+   "price": 70,
+   "blurb": "Crisp puris, tangy spiced water",
+   "accent": "#B0432A",
+   "tags": [
+    "veg",
+    "hot",
+    "star"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "dahi-puri",
+   "cat": "chaat",
+   "name": "Dahi Puri",
+   "tamil": "",
+   "price": 80,
+   "blurb": "Puris, yoghurt & chutneys",
+   "accent": "#B0432A",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "bhel-puri",
+   "cat": "chaat",
+   "name": "Bhel Puri",
+   "tamil": "",
+   "price": 80,
+   "blurb": "Puffed rice, tangy & crunchy",
+   "accent": "#B0432A",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "pappadi-chaat",
+   "cat": "chaat",
+   "name": "Pappadi Chaat",
+   "tamil": "",
+   "price": 100,
+   "blurb": "Crackers, yoghurt & chutneys",
+   "accent": "#B0432A",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "bread-omelette",
+   "cat": "snacks",
+   "name": "Bread Omelette",
+   "tamil": "",
+   "price": 70,
+   "blurb": "Fluffy egg omelette with toast",
+   "accent": "#8E5A22",
+   "tags": [],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "veg-sandwich",
+   "cat": "snacks",
+   "name": "Veg Sandwich",
+   "tamil": "",
+   "price": 100,
+   "blurb": "Grilled veggies & chutney",
+   "accent": "#8E5A22",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "paneer-sandwich",
+   "cat": "snacks",
+   "name": "Paneer Sandwich",
+   "tamil": "",
+   "price": 150,
+   "blurb": "Spiced paneer, grilled crisp",
+   "accent": "#8E5A22",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "veg-puff",
+   "cat": "snacks",
+   "name": "Veg Puff",
+   "tamil": "",
+   "price": 60,
+   "blurb": "Flaky pastry, spiced veg",
+   "accent": "#8E5A22",
+   "tags": [
+    "veg",
+    "star"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "egg-puff",
+   "cat": "snacks",
+   "name": "Egg Puff",
+   "tamil": "",
+   "price": 80,
+   "blurb": "Flaky pastry, spiced egg",
+   "accent": "#8E5A22",
+   "tags": [],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "jam-bun",
+   "cat": "buns",
+   "name": "Jam Bun",
+   "tamil": "",
+   "price": 60,
+   "blurb": "Soft bun with fruit jam",
+   "accent": "#A97C3F",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "maska-bun",
+   "cat": "buns",
+   "name": "Maska Bun",
+   "tamil": "",
+   "price": 60,
+   "blurb": "Soft bun slathered with butter",
+   "accent": "#A97C3F",
+   "tags": [
+    "veg",
+    "star"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "bun-butter-jam",
+   "cat": "buns",
+   "name": "Bun Butter Jam",
+   "tamil": "",
+   "price": 100,
+   "blurb": "Loaded with butter & jam",
+   "accent": "#A97C3F",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "cheese-garlic-bun",
+   "cat": "buns",
+   "name": "Cheese Garlic Bun",
+   "tamil": "",
+   "price": 80,
+   "blurb": "Toasted, cheese & garlic butter",
+   "accent": "#A97C3F",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "margherita",
+   "cat": "pizza",
+   "name": "Margherita",
+   "tamil": "",
+   "price": 150,
+   "blurb": "8 inch · tomato, cheese & basil",
+   "accent": "#9E4A3C",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "veg-pizza",
+   "cat": "pizza",
+   "name": "Veg Pizza",
+   "tamil": "",
+   "price": 180,
+   "blurb": "8 inch · loaded veggies & cheese",
+   "accent": "#9E4A3C",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "white-sauce-pasta",
+   "cat": "pasta",
+   "name": "White Sauce Pasta",
+   "tamil": "",
+   "price": 75,
+   "blurb": "Creamy cheese & herb sauce",
+   "accent": "#7C6B24",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "red-sauce-pasta",
+   "cat": "pasta",
+   "name": "Red Sauce Pasta",
+   "tamil": "",
+   "price": 75,
+   "blurb": "Tangy tomato & basil sauce",
+   "accent": "#7C6B24",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "butter-cookie",
+   "cat": "cookies",
+   "name": "Butter Cookie",
+   "tamil": "",
+   "price": 10,
+   "blurb": "Crisp, buttery, melt-in-mouth",
+   "accent": "#8A6A22",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "salt-cookie",
+   "cat": "cookies",
+   "name": "Salt Cookie",
+   "tamil": "",
+   "price": 10,
+   "blurb": "Lightly salted, crisp bite",
+   "accent": "#8A6A22",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "butter-almond",
+   "cat": "cookies",
+   "name": "Butter Almond",
+   "tamil": "",
+   "price": 15,
+   "blurb": "Buttery, topped with almond",
+   "accent": "#8A6A22",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "chocolate-doughnut",
+   "cat": "doughnuts",
+   "name": "Chocolate Doughnut",
+   "tamil": "",
+   "price": 80,
+   "blurb": "Glazed with rich chocolate",
+   "accent": "#5B3A5A",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "almond-doughnut",
+   "cat": "doughnuts",
+   "name": "Almond Doughnut",
+   "tamil": "",
+   "price": 80,
+   "blurb": "Topped with toasted almond",
+   "accent": "#5B3A5A",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "pistachio-doughnut",
+   "cat": "doughnuts",
+   "name": "Pistachio Doughnut",
+   "tamil": "",
+   "price": 80,
+   "blurb": "Topped with crushed pista",
+   "accent": "#5B3A5A",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "brownie",
+   "cat": "dessert",
+   "name": "Brownie",
+   "tamil": "",
+   "price": 100,
+   "blurb": "Warm, fudgy chocolate brownie",
+   "accent": "#4E3320",
+   "tags": [
+    "veg",
+    "star"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "brownie-ice-cream",
+   "cat": "dessert",
+   "name": "Brownie + Ice Cream",
+   "tamil": "",
+   "price": 140,
+   "blurb": "Warm brownie, vanilla scoop",
+   "accent": "#4E3320",
+   "tags": [
+    "veg",
+    "star"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "vanilla-cake",
+   "cat": "dessert",
+   "name": "Vanilla Cake",
+   "tamil": "",
+   "price": 50,
+   "blurb": "Soft vanilla tea cake",
+   "accent": "#4E3320",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "chocolate-cake",
+   "cat": "dessert",
+   "name": "Chocolate Cake",
+   "tamil": "",
+   "price": 50,
+   "blurb": "Moist chocolate tea cake",
+   "accent": "#4E3320",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "black-forest-cake",
+   "cat": "dessert",
+   "name": "Black Forest Cake",
+   "tamil": "",
+   "price": 50,
+   "blurb": "Cherry & cream tea cake",
+   "accent": "#4E3320",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "strawberry-cake",
+   "cat": "dessert",
+   "name": "Strawberry Cake",
+   "tamil": "",
+   "price": 50,
+   "blurb": "Strawberry cream tea cake",
+   "accent": "#4E3320",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "pista-cake",
+   "cat": "dessert",
+   "name": "Pista Cake",
+   "tamil": "",
+   "price": 50,
+   "blurb": "Pistachio tea cake",
+   "accent": "#4E3320",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  },
+  {
+   "id": "blueberry-cake",
+   "cat": "dessert",
+   "name": "Blueberry Cake",
+   "tamil": "",
+   "price": 50,
+   "blurb": "Blueberry tea cake",
+   "accent": "#4E3320",
+   "tags": [
+    "veg"
+   ],
+   "time": "",
+   "serves": "",
+   "level": "",
+   "ingredients": [],
+   "steps": [],
+   "note": ""
+  }
+ ],
+ "posts": [],
+ "cake": {
+  "flavours": [],
+  "sizes": [],
+  "finishes": [],
+  "occasions": [],
+  "addons": [],
+  "packages": []
+ }
+}

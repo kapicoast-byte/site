@@ -1,0 +1,196 @@
+// Kapi Coast — content model.
+// Everything the admin panel can edit lives here. Public pages read from it;
+// nothing on the site is hard-coded any more.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// Menu categories — the filter chips on /menu.
+model Category {
+  id    String     @id @default(cuid())
+  slug  String     @unique
+  label String
+  order Int        @default(0)
+  items MenuItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+/// A dish, with its recipe. Ingredients and steps are JSON so the admin form
+/// can add or remove rows without a migration.
+model MenuItem {
+  id         String   @id @default(cuid())
+  slug       String   @unique
+  name       String
+  tamil      String   @default("")
+  price      Int
+  blurb      String   @default("")
+  accent     String   @default("#6B4226")
+  imageUrl   String?
+  /// "veg" | "hot" | "star"
+  tags       String[] @default([])
+  published  Boolean  @default(true)
+  order      Int      @default(0)
+
+  // Recipe
+  time        String @default("")
+  serves      String @default("")
+  level       String @default("")
+  /// [{ amt, txt }]
+  ingredients Json   @default("[]")
+  /// ["step one", "step two"]
+  steps       Json   @default("[]")
+  note        String @default("")
+
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([categoryId])
+}
+
+/// Journal posts. Body is a JSON block list: [{ t: "p"|"h"|"q"|"ul", c: ... }]
+model Post {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  title     String
+  category  String   @default("Notes")
+  excerpt   String   @default("")
+  imageUrl  String?
+  readMins  Int      @default(4)
+  body      Json     @default("[]")
+  published Boolean  @default(true)
+  publishedAt DateTime @default(now())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+/// Cake builder options. `kind` groups them: flavour | size | finish | occasion | addon
+model CakeOption {
+  id    String @id @default(cuid())
+  kind  String
+  key   String
+  label String
+  note  String @default("")
+  /// Base price for a flavour, surcharge for a finish/add-on
+  price Int    @default(0)
+  /// Size multiplier, stored x100 so it stays an integer (100 = 1.0x)
+  multiplier Int @default(100)
+  /// Rendering hints for the little cake preview
+  tierColor  String @default("#6B4226")
+  frostColor String @default("#E8D4B8")
+  heightPx   Int    @default(62)
+  order      Int    @default(0)
+  active     Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([kind, key])
+  @@index([kind])
+}
+
+/// Event packages on /cakes
+model Package {
+  id     String   @id @default(cuid())
+  name   String
+  price  String
+  unit   String   @default("")
+  items  String[] @default([])
+  hero   Boolean  @default(false)
+  order  Int      @default(0)
+  active Boolean  @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+/// Single-row site settings: name, contact, hours, hero copy, hero media.
+model Settings {
+  id Int @id @default(1)
+
+  cafeName    String @default("Kapi Coast")
+  tamilName   String @default("காபி கோஸ்ட்")
+  tagline     String @default("Degree filter kapi · Kadak chai · Chaat & street eats")
+  heroLine1   String @default("Filter coffee, hot chai and street food made fresh in front of you.")
+  heroLine2   String @default("An easy place to sit — from the first cup of the morning to the last of the night.")
+  heroEyebrow String @default("OMR · Kazhipattur")
+  heroBadge   String @default("Open till 11 pm")
+  heroTrust   String @default("Freshly brewed all day · Dine in or takeaway")
+  heroSide    String @default("Made fresh · Served warm")
+
+  // Media — all swappable from the admin panel
+  logoUrl        String @default("/img/logo.png")
+  logoDarkUrl    String @default("/img/logo-nav.png")
+  heroVideoUrl   String @default("/video/kapi-hills.mp4")
+  heroPosterUrl  String @default("/img/hero-poster.jpg")
+  storyImage1Url String @default("")
+  storyImage2Url String @default("")
+
+  /// The owner's note on the home page.
+  ///
+  /// Blank by default, and deliberately so: a message signed with a real
+  /// person's name has to be that person's own words. Until ownerNote is
+  /// filled in, the home page shows a plain unsigned intro instead of putting
+  /// words in anyone's mouth. Fill these in from Admin -> Site settings.
+  ownerName     String @default("")
+  ownerRole     String @default("Owner")
+  /// Stand-in silhouette until a real photograph is uploaded. Deliberately not
+  /// a stock face — a borrowed face on an About page is worse than none.
+  ownerPhotoUrl String @default("/img/owner-placeholder.webp")
+  ownerNote     String @default("")
+
+  // Contact
+  phone     String @default("+91 98400 00000")
+  whatsapp  String @default("919840000000")
+  email     String @default("hello@kapicoast.in")
+  addressL1 String @default("105, OMR Road, Kazhipattur Village")
+  addressL2 String @default("Vaniyanchavadi, Kalipattur")
+  addressL3 String @default("Chennai, Tamil Nadu 603103")
+  mapsQuery String @default("105, OMR Rd, Kazhipattur Village, Vaniyanchavadi, Kalipattur, Chennai, Tamil Nadu 603103")
+
+  /// [{ day, time }]
+  hours Json @default("[]")
+
+  /// Strings scrolling in the marquee band
+  marquee String[] @default([])
+
+  updatedAt DateTime @updatedAt
+}
+
+/// Uploaded files, so the admin has a media library rather than loose paths.
+model Media {
+  id        String   @id @default(cuid())
+  filename  String
+  url       String   @unique
+  mimeType  String
+  size      Int
+  width     Int?
+  height    Int?
+  alt       String   @default("")
+  createdAt DateTime @default(now())
+}
+
+/// Standalone content pages — Terms, Privacy, and anything else the owner adds.
+/// Body uses the same block format as Post: [{ t: "p"|"h"|"ul", c }]
+model Page {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  title     String
+  intro     String   @default("")
+  body      Json     @default("[]")
+  published Boolean  @default(true)
+  /// Shown to visitors as "Last updated"
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+}
