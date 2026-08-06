@@ -69,17 +69,11 @@ command again any time to change it.
 
 ---
 
-## 3. Create the Postgres service in Dokploy
-
-Dokploy → **Databases → Create → PostgreSQL**. Note the connection string it
-gives you; it becomes `DATABASE_URL`.
-
----
-
-## 3b. Firebase Storage (for uploaded photos) — optional
+## 3. Firebase Storage (for uploaded photos) — optional
 
 Stops a lost disk volume taking every photo with it. Uses the same service
-account from step 2 — nothing new to generate.
+account from step 2 — nothing new to generate, and no separate database service
+to create either: Firestore is already provisioned in the same project.
 
 Add one more variable in Dokploy: `FIREBASE_STORAGE_BUCKET`, e.g.
 `your-project.firebasestorage.app`.
@@ -119,11 +113,10 @@ Dokploy → **Applications → Create**, point it at the GitHub repo, build type
 
 | Variable | Value |
 | --- | --- |
-| `DATABASE_URL` | from step 3 |
 | `ADMIN_EMAIL` | your login address (see step 2) |
 | `FIREBASE_SERVICE_ACCOUNT` | base64 service-account JSON (see step 2) |
 | `FIREBASE_WEB_API_KEY` | from step 2 |
-| `FIREBASE_STORAGE_BUCKET` | `your-project.firebasestorage.app` (see step 3b) — omit to use disk instead |
+| `FIREBASE_STORAGE_BUCKET` | `your-project.firebasestorage.app` (see step 3) — omit to use disk instead |
 | `UPLOAD_DIR` | `/app/uploads` |
 | `SITE_URL` | `https://your-real-domain` |
 
@@ -154,9 +147,12 @@ during setup and tightens automatically once TLS is on. Nothing to change.
 
 `docker-entrypoint.sh` runs before the server starts:
 
-1. `prisma db push` — creates the tables
-2. `prisma/seed.mjs` — loads 76 dishes, 71 recipes, 6 journal posts, Terms and Privacy
-3. starts the app
+1. `seed/seed.mjs` — adds anything missing: 76 dishes, 71 recipes, 6 journal
+   posts, Terms and Privacy
+2. starts the app
+
+There is no schema to migrate and no database to wait for — Firestore is
+schemaless and managed.
 
 The seed only adds what is missing, so redeploys never overwrite your edits.
 
@@ -184,8 +180,9 @@ Search Console → add the property → **Sitemaps** → submit `sitemap.xml`.
 
 ## Worth doing before you depend on it
 
-- **Back up two things, not one.** The Postgres database *and* the uploads
-  volume. Backing up one does not cover the other.
-- **Switch to Prisma migrations.** The schema is applied with `db push`, which
-  is fine for adding fields but can drop a column's data on a rename. Worth
-  changing once the content matters.
+- **Turn on Firestore backups.** Firebase Console → Firestore → Backups. The
+  content is the part that cannot be rebuilt from the repo.
+- **Watch the free tier.** Pages are server-rendered on every request, so
+  `/menu` costs roughly 77 Firestore reads per view — about 650 views a day
+  before the 50K/day free allowance runs out. Caching is a small change if
+  traffic ever approaches that.
