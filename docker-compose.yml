@@ -2,66 +2,35 @@
 # a "Docker Compose" application pointed at this repo — it runs exactly
 # `docker compose -f ./docker-compose.yml up -d --build`, nothing more.
 #
-# Neither service publishes a port to the host. That is deliberate, not an
-# oversight: a fixed host-port bind is what caused a real failure —
-# "Bind for 0.0.0.0:3000 failed: port is already allocated" — because some
-# other container on the same shared server already held 3000. Dokploy's own
-# reverse proxy (Traefik) reaches `web` over the internal Docker network by
-# service name and container port, which it learns from the app's Domains
-# settings in the dashboard, not from a `ports:` entry here. The same class of
-# collision applies to Postgres on 5432, so it is unpublished too.
+# One service. There is no database container: content lives in Firestore and
+# uploads in Firebase Storage, both managed and both reached over the network
+# with the same service-account credential.
 #
-# For local development, `docker-compose.override.yml` adds the port
-# publishing back — `docker compose up` (no `-f` flags) merges it in
-# automatically, but Dokploy's explicit `-f ./docker-compose.yml` does not, so
-# it never reaches production.
+# The service publishes no host port. That is deliberate, not an oversight: a
+# fixed host-port bind caused a real failure — "Bind for 0.0.0.0:3000 failed:
+# port is already allocated" — because another container on the same shared
+# server already held 3000. Dokploy's reverse proxy (Traefik) reaches this
+# container over `dokploy-network` by service name and container port, which it
+# learns from the app's Domains settings in the dashboard.
 #
-# Networking, which is the part that is easy to get wrong:
+# `dokploy-network` is external — created and owned by Dokploy. Without joining
+# it, Traefik has no route in and every request returns its bare
+# "404 page not found" even though the app is running perfectly.
 #
-#   `web` joins BOTH networks. `dokploy-network` is the external network
-#   Dokploy's Traefik proxy already runs on — without joining it, Traefik has
-#   no route to the container and every request returns Traefik's own bare
-#   "404 page not found", even though the app is running perfectly. Removing
-#   the host port bind (above) is what makes this mandatory rather than
-#   optional: there is no other path in.
-#
-#   `db` joins ONLY `internal`. Postgres has no business being reachable from
-#   the proxy network, and `web` can still resolve it by service name because
-#   they share `internal`.
+# For local development, `docker-compose.override.yml` publishes port 3000 and
+# redeclares that network as local. `docker compose up` (no `-f` flags) merges
+# it automatically; Dokploy's explicit `-f ./docker-compose.yml` does not.
 services:
-  db:
-    image: postgres:16-alpine
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: kapi
-      POSTGRES_PASSWORD: kapi
-      POSTGRES_DB: kapicoast
-    volumes:
-      - db-data:/var/lib/postgresql/data
-    expose:
-      - "5432"
-    networks:
-      - internal
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U kapi -d kapicoast"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-
   web:
     build: .
     restart: unless-stopped
-    depends_on:
-      db:
-        condition: service_healthy
     environment:
-      DATABASE_URL: postgresql://kapi:kapi@db:5432/kapicoast?schema=public
-      # Login is Firebase Auth now — no local password or session secret left
-      # to default here. Export these in your shell before `docker compose up`,
-      # or the admin panel will refuse every sign-in attempt.
+      # Login is Firebase Auth and content is Firestore, so these are not
+      # optional — the app cannot serve a page or sign anyone in without them.
       ADMIN_EMAIL: ${ADMIN_EMAIL:?set ADMIN_EMAIL before starting}
       FIREBASE_SERVICE_ACCOUNT: ${FIREBASE_SERVICE_ACCOUNT:?set FIREBASE_SERVICE_ACCOUNT before starting}
       FIREBASE_WEB_API_KEY: ${FIREBASE_WEB_API_KEY:?set FIREBASE_WEB_API_KEY before starting}
+      # Optional: unset means uploads fall back to the local disk at UPLOAD_DIR.
       FIREBASE_STORAGE_BUCKET: ${FIREBASE_STORAGE_BUCKET:-}
       UPLOAD_DIR: /app/uploads
       SITE_URL: ${SITE_URL:-http://localhost:3000}
@@ -70,19 +39,14 @@ services:
     expose:
       - "3000"
     networks:
-      - internal
       - dokploy-network
 
 volumes:
-  db-data:
   uploads:
 
 networks:
-  # Private to this stack: how `web` reaches `db`.
-  internal:
-
   # Created and owned by Dokploy, shared with its Traefik proxy. `external`
-  # means "already exists, do not create it" — Compose will error out if it is
+  # means "already exists, do not create it" — Compose errors out if it is
   # missing, which is a far better failure than silently starting a container
   # nothing can route to.
   dokploy-network:

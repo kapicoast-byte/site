@@ -2,6 +2,7 @@ import "server-only";
 import { getApps, initializeApp, cert, type App } from "firebase-admin/app";
 import { getStorage } from "firebase-admin/storage";
 import { getAuth } from "firebase-admin/auth";
+import { getFirestore } from "firebase-admin/firestore";
 
 /**
  * Firebase, server-side only.
@@ -99,4 +100,18 @@ export function bucket() {
 
 export function auth() {
   return getAuth(getApp());
+}
+
+let firestoreReady = false;
+
+export function firestore() {
+  const instance = getFirestore(getApp());
+  if (!firestoreReady) {
+    // Prisma returned `null` for unset optional columns; Firestore omits absent
+    // fields entirely unless told otherwise. Writing undefined as "leave this
+    // field alone" keeps partial updates behaving the way the app expects.
+    instance.settings({ ignoreUndefinedProperties: true });
+    firestoreReady = true;
+  }
+  return instance;
 }

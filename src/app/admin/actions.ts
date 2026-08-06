@@ -6,7 +6,6 @@ import { db } from "@/lib/db";
 import { requireAdmin, attemptLogin, destroySession } from "@/lib/auth";
 import { saveUpload, deleteUpload, UploadError } from "@/lib/uploads";
 import { takeLoginAttempt, clearLoginAttempts } from "@/lib/ratelimit";
-import type { Prisma } from "@prisma/client";
 
 /** What every form action resolves to. Actions that redirect never return. */
 export type ActionState = { ok?: string; error?: string } | null;
@@ -191,7 +190,7 @@ export async function savePost(_prev: unknown, form: FormData): Promise<ActionSt
 
   // Body is written as plain text. Blank line = new paragraph.
   // "## " prefix = heading, "> " = pull quote, "- " = list item.
-  const body: Prisma.InputJsonValue[] = [];
+  const body: unknown[] = [];
   let list: string[] = [];
   const flush = () => {
     if (list.length) { body.push({ t: "ul", c: list }); list = []; }
@@ -214,7 +213,7 @@ export async function savePost(_prev: unknown, form: FormData): Promise<ActionSt
     excerpt: str(form, "excerpt"),
     imageUrl: str(form, "imageUrl") || null,
     readMins: num(form, "readMins", 4),
-    body: body as unknown as Prisma.InputJsonValue,
+    body,
     published: bool(form, "published"),
   };
 
@@ -248,7 +247,7 @@ export async function savePage(_prev: unknown, form: FormData): Promise<ActionSt
 
   // Same plain-text format as the journal: blank line = paragraph,
   // "## " = heading, "- " = bullet.
-  const body: Prisma.InputJsonValue[] = [];
+  const body: unknown[] = [];
   let list: string[] = [];
   const flush = () => {
     if (list.length) { body.push({ t: "ul", c: list }); list = []; }
@@ -269,7 +268,7 @@ export async function savePage(_prev: unknown, form: FormData): Promise<ActionSt
       data: {
         title: str(form, "title"),
         intro: str(form, "intro"),
-        body: body as unknown as Prisma.InputJsonValue,
+        body,
         published: bool(form, "published"),
       },
     });

@@ -4,25 +4,24 @@
 
 # ---- deps -----------------------------------------------------------------
 FROM node:22-alpine AS deps
-RUN apk add --no-cache libc6-compat openssl
+# libc6-compat is for sharp's native binary. openssl was for Prisma's query
+# engine and is no longer needed now that the database is Firestore.
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY package.json package-lock.json* ./
 RUN npm ci
 
 # ---- build ----------------------------------------------------------------
 FROM node:22-alpine AS builder
-RUN apk add --no-cache libc6-compat openssl
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-# Prisma needs a DATABASE_URL present at generate time, but never connects.
-ENV DATABASE_URL="postgresql://build:build@localhost:5432/build"
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN npx prisma generate && npm run build
+RUN npm run build
 
 # ---- runtime --------------------------------------------------------------
 FROM node:22-alpine AS runner
-RUN apk add --no-cache openssl
 WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
@@ -37,12 +36,10 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 
-# Prisma CLI + schema so the container can run migrations on boot.
-COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/prisma ./node_modules/prisma
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/@prisma ./node_modules/@prisma
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.bin ./node_modules/.bin
+# The seed script and its data. Firestore is schemaless, so there is no
+# migration step to carry — just the content and the firebase-admin SDK, which
+# Next's standalone trace already placed in ./node_modules.
+COPY --from=builder --chown=nextjs:nodejs /app/seed ./seed
 
 # Mount a Dokploy volume here so uploaded images survive redeploys.
 RUN mkdir -p /app/uploads && chown -R nextjs:nodejs /app/uploads

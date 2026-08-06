@@ -21,14 +21,13 @@ export async function GET() {
   const base = siteUrl();
   const s = await getSettings();
 
-  const [cats, posts, pages, dishCount] = await Promise.all([
-    db.category.findMany({
-      orderBy: { order: "asc" },
-      select: {
-        label: true,
-        _count: { select: { items: { where: { published: true } } } },
-      },
-    }),
+  // Counting dishes per category was a relational aggregate (`_count`), which
+  // Firestore has no equivalent for. The published dishes are tallied here
+  // instead — one collection read that was already being paid for, rather than
+  // a query per category.
+  const [cats, dishes, posts, pages] = await Promise.all([
+    db.category.findMany({ orderBy: { order: "asc" } }),
+    db.menuItem.findMany({ where: { published: true } }),
     db.post.findMany({
       where: { published: true },
       orderBy: { publishedAt: "desc" },
@@ -38,16 +37,21 @@ export async function GET() {
       where: { published: true },
       select: { slug: true, title: true, intro: true },
     }),
-    db.menuItem.count({ where: { published: true } }),
   ]);
+
+  const dishCount = dishes.length;
+  const perCategory = new Map<string, number>();
+  for (const dish of dishes) {
+    perCategory.set(dish.categoryId, (perCategory.get(dish.categoryId) ?? 0) + 1);
+  }
+  const stocked = cats.filter((c) => (perCategory.get(c.id) ?? 0) > 0);
 
   const hours = hoursOf(s)
     .map((h) => `- ${h.day}: ${h.time || "—"}`)
     .join("\n");
 
-  const categories = cats
-    .filter((c) => c._count.items > 0)
-    .map((c) => `- ${c.label} (${c._count.items})`)
+  const categories = stocked
+    .map((c) => `- ${c.label} (${perCategory.get(c.id)})`)
     .join("\n");
 
   const journal = posts.length
@@ -79,7 +83,7 @@ ${hours}
 
 ## Menu
 
-${dishCount} dishes across ${cats.filter((c) => c._count.items > 0).length} categories, each with its
+${dishCount} dishes across ${stocked.length} categories, each with its
 ingredients and method. Prices are in Indian Rupees and include applicable taxes.
 
 ${categories}

@@ -1,5 +1,5 @@
 /**
- * Generates prisma/seed-data.json from the real Kapi Coast menu card.
+ * Generates seed/seed-data.json from the real Kapi Coast menu card.
  *
  * Everything here is transcribed from the printed menu PDF — names, prices and
  * the one-line descriptions. Nothing is invented. Recipes are intentionally

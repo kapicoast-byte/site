@@ -5,8 +5,7 @@
 #
 # Two jobs:
 #
-#   1. Publish both services to your machine, so you get http://localhost:3000
-#      and a psql-reachable Postgres on 5432.
+#   1. Publish the app to your machine on http://localhost:3000.
 #
 #   2. Undo the `external: true` on `dokploy-network`. That network is created
 #      by Dokploy and only exists on the server; left external, Compose would
@@ -14,14 +13,10 @@
 #      external, but could not be found". Declared here without it, Compose
 #      just creates a throwaway local network of that name instead.
 #
-# Note that day-to-day development does not need Docker at all — `npm run dev`
-# against the local Postgres is faster. This file is for testing the container
-# itself.
+# Day-to-day development does not need Docker at all — `npm run dev` talks to
+# the same Firestore project and is far faster. This file is for testing the
+# container itself.
 services:
-  db:
-    ports:
-      - "5432:5432"
-
   web:
     ports:
       - "3000:3000"
