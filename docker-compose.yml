@@ -15,6 +15,19 @@
 # publishing back — `docker compose up` (no `-f` flags) merges it in
 # automatically, but Dokploy's explicit `-f ./docker-compose.yml` does not, so
 # it never reaches production.
+#
+# Networking, which is the part that is easy to get wrong:
+#
+#   `web` joins BOTH networks. `dokploy-network` is the external network
+#   Dokploy's Traefik proxy already runs on — without joining it, Traefik has
+#   no route to the container and every request returns Traefik's own bare
+#   "404 page not found", even though the app is running perfectly. Removing
+#   the host port bind (above) is what makes this mandatory rather than
+#   optional: there is no other path in.
+#
+#   `db` joins ONLY `internal`. Postgres has no business being reachable from
+#   the proxy network, and `web` can still resolve it by service name because
+#   they share `internal`.
 services:
   db:
     image: postgres:16-alpine
@@ -27,6 +40,8 @@ services:
       - db-data:/var/lib/postgresql/data
     expose:
       - "5432"
+    networks:
+      - internal
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U kapi -d kapicoast"]
       interval: 5s
@@ -54,7 +69,21 @@ services:
       - uploads:/app/uploads
     expose:
       - "3000"
+    networks:
+      - internal
+      - dokploy-network
 
 volumes:
   db-data:
   uploads:
+
+networks:
+  # Private to this stack: how `web` reaches `db`.
+  internal:
+
+  # Created and owned by Dokploy, shared with its Traefik proxy. `external`
+  # means "already exists, do not create it" — Compose will error out if it is
+  # missing, which is a far better failure than silently starting a container
+  # nothing can route to.
+  dokploy-network:
+    external: true

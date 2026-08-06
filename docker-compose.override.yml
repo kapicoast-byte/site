@@ -1,12 +1,22 @@
-# Local-only convenience: publishes both services to your machine so
-# `docker compose up` gives you http://localhost:3000 and a psql-reachable
-# Postgres on 5432 immediately.
+# Local-only convenience. `docker compose` merges this automatically whenever
+# it runs without an explicit `-f` list, which is the normal local workflow.
+# Dokploy's deploy command passes `-f ./docker-compose.yml` explicitly, so
+# nothing here ever reaches production.
 #
-# `docker compose` merges this automatically whenever it is run without an
-# explicit `-f` list, which is the normal local workflow. Dokploy's deploy
-# command passes `-f ./docker-compose.yml` explicitly, so this file is never
-# part of what runs in production — it cannot be what caused a host port
-# collision there.
+# Two jobs:
+#
+#   1. Publish both services to your machine, so you get http://localhost:3000
+#      and a psql-reachable Postgres on 5432.
+#
+#   2. Undo the `external: true` on `dokploy-network`. That network is created
+#      by Dokploy and only exists on the server; left external, Compose would
+#      refuse to start locally with "network dokploy-network declared as
+#      external, but could not be found". Declared here without it, Compose
+#      just creates a throwaway local network of that name instead.
+#
+# Note that day-to-day development does not need Docker at all — `npm run dev`
+# against the local Postgres is faster. This file is for testing the container
+# itself.
 services:
   db:
     ports:
@@ -15,3 +25,7 @@ services:
   web:
     ports:
       - "3000:3000"
+
+networks:
+  dokploy-network:
+    external: false
