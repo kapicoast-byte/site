@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import ScrollReveal from "@/components/ScrollReveal";
 
 export const metadata: Metadata = {
   title: "Kapi Coast — காபி கோஸ்ட் · Filter kapi, kadak chai & street eats on OMR, Chennai",
@@ -36,7 +37,13 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        {/* Renders nothing. It finds the page's own sections and animates them
+            in as they are scrolled to, so no page had to be edited to opt in
+            and nothing has to be remembered when one is added. */}
+        <ScrollReveal />
+      </body>
     </html>
   );
 }

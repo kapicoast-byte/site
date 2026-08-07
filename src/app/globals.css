@@ -1211,13 +1211,11 @@ body.menu-open .burger span:nth-child(3) { transform: translateY(-6px) rotate(-4
 .foot__logo img { width: 56px; height: 56px; }
 
 /* ---------- 19. Scroll reveal ------------------------------------------- */
-[data-reveal] {
-  opacity: 0; transform: translateY(26px);
-  transition: opacity .8s var(--ease), transform .9s var(--ease);
-  transition-delay: var(--d, 0ms);
-}
-[data-reveal].is-in { opacity: 1; transform: none; }
-@media (prefers-reduced-motion: reduce) { [data-reveal] { opacity: 1; transform: none; } }
+/* Removed. This block hid every [data-reveal] element and waited for an
+   `.is-in` class that nothing in the codebase ever added — so it was inert,
+   and would have blanked the page the moment anything started using the
+   attribute. The live implementation is in the depth pass at the end of this
+   file, driven by components/ScrollReveal.tsx. */
 
 /* ---------- 20. Misc ---------------------------------------------------- */
 .split-rule { height: 1px; background: var(--line); }
@@ -2140,4 +2138,106 @@ html { -webkit-tap-highlight-color: rgba(255, 198, 60, .18); }
   /* Stacks rather than squeezing the quote into a narrow column beside the
      photo, where the display face would break badly. */
   .ownercard { flex-direction: column; align-items: center; text-align: center; }
+}
+
+/* ==========================================================================
+   Depth pass
+   Nothing here changes the palette or the typefaces. It changes how surfaces
+   are lit: what a thing is made of, how far off the page it sits, and how it
+   answers when touched.
+   ========================================================================== */
+
+:root {
+  /* Decelerates hard and settles — the curve used for anything that should
+     feel like it has mass. Sharper than ease-out, which is why the same
+     duration reads as heavier rather than slower. */
+  --ease-out-expo: cubic-bezier(.32, .72, 0, 1);
+
+  /* Layered, never a single blur. A real object casts a tight contact shadow
+     where it meets the surface AND a wide ambient one; one big soft shadow is
+     the difference between an object resting on a page and a sticker floating
+     above it. */
+  --elev-1: 0 1px 2px rgb(0 0 0 / .26), 0 4px 10px -4px rgb(0 0 0 / .32);
+  --elev-2: 0 1px 2px rgb(0 0 0 / .30),
+            0 8px 20px -8px rgb(0 0 0 / .40),
+            0 24px 48px -24px rgb(0 0 0 / .48);
+
+  /* One lit pixel along the top edge, where a raised face would catch the
+     light. On a dark interface this is the single strongest cue that a surface
+     has thickness rather than being a painted rectangle. */
+  --lit-edge: inset 0 1px 0 rgb(255 255 255 / .07);
+}
+
+/* ---- surfaces ----------------------------------------------------------- */
+
+.card, .pkg {
+  position: relative;
+  box-shadow: var(--elev-2), var(--lit-edge);
+  transition: transform .55s var(--ease-out-expo), box-shadow .55s var(--ease-out-expo);
+}
+/* The second bezel. A hairline set in from the edge, concentric with the outer
+   radius, so the card reads as a panel seated in a tray rather than a single
+   flat plane. Inset and radius are tied together — non-concentric corners are
+   the tell that makes nested boxes look wrong without anyone naming why. */
+.card::after, .pkg::after {
+  content: "";
+  position: absolute; inset: 5px;
+  border-radius: calc(var(--r-m) - 5px);
+  border: 1px solid rgb(255 255 255 / .055);
+  pointer-events: none;
+}
+.on-cream .card::after, .on-cream .pkg::after { border-color: rgb(16 12 8 / .07); }
+
+.card:hover, .pkg:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--elev-2), var(--lit-edge), 0 40px 70px -34px rgb(0 0 0 / .6);
+}
+
+.ownercard, .story__img { box-shadow: var(--elev-1), var(--lit-edge); }
+.ownercard__face { box-shadow: var(--elev-2); }
+
+/* ---- press physics ------------------------------------------------------ */
+
+/* A button that only changes colour is a picture of a button. Lifting on hover
+   and compressing under the pointer gives it a surface to push against. */
+.btn:active { transform: translateY(0) scale(.975); }
+.btn { transition: transform .35s var(--ease-out-expo), background .3s, color .3s, box-shadow .35s var(--ease-out-expo); }
+/* The arrow leads the hand. */
+.btn svg, .tlink svg { transition: transform .45s var(--ease-out-expo); }
+.btn:hover svg, .tlink:hover svg { transform: translateX(3px); }
+
+/* ---- grain -------------------------------------------------------------- */
+
+/* Fixed and pointer-events:none, so it never repaints with the scroll and
+   never eats a click. Flat colour fields are the giveaway of a screen design;
+   a little tooth is what makes them read as printed matter. */
+body::after {
+  content: "";
+  position: fixed; inset: 0;
+  pointer-events: none;
+  z-index: 5;
+  opacity: .038;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---- scroll entry ------------------------------------------------------- */
+
+/* The attribute is added by ScrollReveal at runtime, never in the markup. If
+   the script fails to load, nothing was ever hidden — the alternative is a
+   page whose entire content is invisible because one bundle 404'd. */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(2.2rem);
+  transition:
+    opacity .85s var(--ease-out-expo),
+    transform .85s var(--ease-out-expo);
+  will-change: transform, opacity;
+}
+[data-reveal="in"] { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] { opacity: 1; transform: none; transition: none; }
+  .card:hover, .pkg:hover { transform: none; }
+  .btn:hover svg, .tlink:hover svg { transform: none; }
 }
