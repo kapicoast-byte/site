@@ -19,3 +19,7 @@ tsconfig.tsbuildinfo
 service-account*.json
 serviceAccount*.json
 *-firebase-adminsdk-*.json
+
+# Agent skills installed locally (npx skills add). Reference material for
+# editors, not part of the site — it has no business in the image or the repo.
+.agents/

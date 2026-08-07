@@ -8,3 +8,6 @@ uploads
 README.md
 .pgdata
 scripts
+
+# Agent skill docs — editor reference only.
+.agents

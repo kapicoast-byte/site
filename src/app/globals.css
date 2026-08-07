@@ -139,7 +139,15 @@ body::after {
   line-height: .92;
   letter-spacing: -.015em;
 }
-h1, h2, h3 { font-family: var(--f-display); font-weight: 400; line-height: 1.02; }
+h1, h2, h3 {
+  font-family: var(--f-display); font-weight: 400; line-height: 1.02;
+  /* Evens the lines out instead of filling each one to the edge and dropping
+     whatever is left onto the last. At these sizes a single orphaned word is
+     the difference between a headline that looks set and one that looks
+     wrapped — "We'll bake the middle of your / celebration." reads as a
+     mistake. Browsers that do not support it simply wrap as before. */
+  text-wrap: balance;
+}
 h1 { font-size: clamp(2.9rem, 8.5vw, 7rem); }
 h2 { font-size: clamp(2.2rem, 5.2vw, 4.25rem); }
 h3 { font-size: clamp(1.35rem, 2.1vw, 1.85rem); line-height: 1.12; }
@@ -164,6 +172,7 @@ h3 { font-size: clamp(1.35rem, 2.1vw, 1.85rem); line-height: 1.12; }
   font-size: clamp(1.02rem, 1.35vw, 1.24rem);
   color: var(--cream-dim);
   max-width: 56ch;
+  text-wrap: pretty;
 }
 
 .gold { color: var(--gold); }
@@ -711,6 +720,14 @@ body.menu-open .burger span:nth-child(3) { transform: translateY(-6px) rotate(-4
   padding: .45em .95em; min-width: 200px;
 }
 .search input { background: none; border: 0; outline: 0; width: 100%; font-size: var(--fs-sm); }
+/* The input drops its own outline, so the ring has to be put back on the pill
+   around it — otherwise tabbing to the search lands on something that gives no
+   sign it has focus. Every other field on the site already does this; this one
+   was missed. */
+.search:focus-within {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgb(255 198 60 / .14);
+}
 .search input::placeholder { color: var(--cream-dim); }
 .search svg { width: 15px; height: 15px; opacity: .6; flex: none; }
 
@@ -931,7 +948,11 @@ body.menu-open .burger span:nth-child(3) { transform: translateY(-6px) rotate(-4
 .article__wrap { max-width: 720px; margin-inline: auto; padding-inline: var(--pad); }
 .article__hero { aspect-ratio: 21/9; border-radius: var(--r-l); overflow: hidden; margin: 2rem 0 2.5rem; border: 1px solid var(--line); }
 .article__hero img { width: 100%; height: 100%; object-fit: cover; }
-.prose { font-size: 1.06rem; line-height: 1.78; color: rgba(244,232,213,.86); }
+/* `pretty`, not `balance`. Balance evens every line and is meant for two or
+   three lines of display type; on a long article it fights the measure. Pretty
+   leaves the paragraph alone and only stops the last line being a single
+   stranded word. */
+.prose { font-size: 1.06rem; line-height: 1.78; color: rgba(244,232,213,.86); text-wrap: pretty; }
 .prose > * + * { margin-top: 1.3rem; }
 .prose h3 { font-size: 1.75rem; margin-top: 2.6rem; color: var(--cream); }
 .prose h4 { font-family: var(--f-body); font-size: var(--fs-caps); letter-spacing: .26em; text-transform: uppercase; color: var(--gold); margin-top: 2.2rem; }
