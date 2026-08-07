@@ -182,7 +182,26 @@ export default async function Home() {
           </section>
         )}
 
-        <Marquee red items={["Cakes for birthdays", "High tea", "Office drops on OMR", "48 hour notice"]} />
+        {/* Cakes only — this band sits directly above the cake section, and
+            "High tea" and "Office drops on OMR" belonged to neither.
+
+            Every line is something the site already commits to elsewhere, not a
+            claim written to fill the space: eggless pricing and the OMR
+            delivery area from the cakes page, the 48-hour minimum and the 8 am
+            collection slot from the builder's own date picker, and the hand-
+            piped message from its 40-character limit. Nothing here describes a
+            flavour or a texture, because no cake options exist yet to describe;
+            "rich", "decadent" and "freshly baked" would be filler. */}
+        <Marquee
+          red
+          items={[
+            "Eggless at no extra charge",
+            "Writing piped by hand",
+            "Collection from 8 am",
+            "48 hours' notice",
+            "Delivered along OMR",
+          ]}
+        />
 
         {/* ---------------------------------------------------- cakes ---- */}
         <section className="section">
