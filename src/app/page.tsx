@@ -4,7 +4,7 @@ import { getSettings, hoursOf } from "@/lib/settings";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Marquee from "@/components/Marquee";
-import FanHero from "@/components/FanHero";
+import VideoHero from "@/components/VideoHero";
 import MapEmbed from "@/components/MapEmbed";
 import CakeShowpiece from "@/components/CakeShowpiece";
 import BrandStrip from "@/components/BrandStrip";
@@ -37,7 +37,7 @@ export default async function Home() {
       <Nav logoUrl={s.logoDarkUrl} tamilName={s.tamilName} />
 
       <main id="main">
-        <FanHero
+        <VideoHero
           videoUrl={s.heroVideoUrl}
           posterUrl={s.heroPosterUrl}
           cafeName={s.cafeName}
