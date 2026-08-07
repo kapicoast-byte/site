@@ -1195,7 +1195,9 @@ body.menu-open .burger span:nth-child(3) { transform: translateY(-6px) rotate(-4
 .band h2 { max-width: 18ch; }
 
 /* ---------- 18. Footer -------------------------------------------------- */
-.foot { border-top: 1px solid var(--line); padding-top: clamp(3rem, 6vw, 4.5rem); padding-bottom: 2rem; }
+/* Spacing and the top edge both live in the footer block near the end of this
+   file, with the rest of its design. Split across two places they were only
+   findable by whoever already knew to look twice. */
 .foot__grid { display: grid; gap: 2.2rem; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
 .foot__grid > div:first-child { grid-column: span 2; min-width: 240px; }
 @media (max-width: 620px) { .foot__grid > div:first-child { grid-column: span 1; } }
@@ -2265,8 +2267,15 @@ body::after {
   position: relative;
   /* The plain 1px rule is replaced by ::before below, which fades at both ends
      rather than running wall to wall. */
-  border-top: 0;
-  padding-top: clamp(4rem, 8vw, 6.5rem);
+  /* No border-top: the edge is the gold seam in ::before below, which fades at
+     both ends instead of running wall to wall. */
+  /* The gap above the footer is not this padding alone — the last .section
+     already ends with up to 9rem of its own. At clamp(4rem, 8vw, 6.5rem) the
+     two stacked to roughly 250px of empty page between the last thing said and
+     the first thing in the footer, which reads as the page having stopped
+     rather than as breathing room. The section above supplies the air; this
+     only has to clear the seam. */
+  padding-top: clamp(2.6rem, 4.5vw, 3.6rem);
   padding-bottom: 2.4rem;
   /* A little warmth spilling from the seam, so the footer reads as the end of
      the page rather than a block appended to it. */
