@@ -2177,25 +2177,31 @@ html { -webkit-tap-highlight-color: rgba(255, 198, 60, .18); }
 /* ---- surfaces ----------------------------------------------------------- */
 
 .card, .pkg {
-  position: relative;
   box-shadow: var(--elev-2), var(--lit-edge);
-  transition: transform .55s var(--ease-out-expo), box-shadow .55s var(--ease-out-expo);
+  /* Restates the whole shorthand on purpose. `transition` cannot be appended
+     to — declaring it again here replaces the earlier one outright, and the
+     first version of this rule listed only transform and box-shadow, which
+     silently dropped the border-colour fade these cards already had and made
+     the gold edge snap on hover. */
+  transition:
+    transform .45s var(--ease),
+    border-color .35s,
+    background .35s,
+    box-shadow .55s var(--ease-out-expo);
 }
-/* The second bezel. A hairline set in from the edge, concentric with the outer
-   radius, so the card reads as a panel seated in a tray rather than a single
-   flat plane. Inset and radius are tied together — non-concentric corners are
-   the tell that makes nested boxes look wrong without anyone naming why. */
-.card::after, .pkg::after {
-  content: "";
-  position: absolute; inset: 5px;
-  border-radius: calc(var(--r-m) - 5px);
-  border: 1px solid rgb(255 255 255 / .055);
-  pointer-events: none;
-}
-.on-cream .card::after, .on-cream .pkg::after { border-color: rgb(16 12 8 / .07); }
+/* No inner bezel here.
+   A hairline inset from the edge reads as a second enclosure ONLY when the
+   outer box has padding for it to sit in. `.card` has none — it is
+   `overflow: hidden` with the photo flush to all four edges — so the ring drew
+   a rectangle straight across the image and the caption. `.pkg` is padded and
+   would have taken it, but two card types on one page with different
+   enclosures is worse than neither having one. The lit edge and the layered
+   shadow carry the depth on their own.
 
+   Shadow only below. The existing rules already lift these 6px on hover;
+   adding a competing transform from this end of the file would silently
+   override that and leave two places disagreeing about the hover distance. */
 .card:hover, .pkg:hover {
-  transform: translateY(-4px);
   box-shadow: var(--elev-2), var(--lit-edge), 0 40px 70px -34px rgb(0 0 0 / .6);
 }
 
