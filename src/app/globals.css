@@ -2339,3 +2339,53 @@ body::after {
   align-items: center;
   letter-spacing: .1em;
 }
+
+/* ---- the scrollbar ------------------------------------------------------ */
+
+/* Chrome draws a light-grey bar by default, which on a dark page is the one
+   piece of interface not designed by anyone here.
+   Styled rather than hidden on purpose: `scrollbar-width: none` would take it
+   away completely, and with it the only indication of how long a page is and
+   how far down you are. This makes it belong instead of disappear. */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(255 198 60 / .34) transparent;
+}
+::-webkit-scrollbar { width: 11px; height: 11px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  /* The border is the page's own colour, which insets the thumb and leaves it
+     reading as a slim capsule rather than a bar filling the gutter. */
+  background: linear-gradient(180deg, rgb(255 198 60 / .55), rgb(196 64 42 / .55));
+  border: 3px solid var(--ink);
+  border-radius: 100px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--gold), rgb(196 64 42 / .85));
+}
+::-webkit-scrollbar-corner { background: transparent; }
+
+/* ---- footer rules in gold ----------------------------------------------- */
+
+/* The heading rules were kumkum and the closing divider was the same flat grey
+   as every other border on the site. Both are gold now, and both fade out
+   rather than stopping dead — a rule that ends at full strength reads as a
+   table cell edge, one that fades reads as an ornament. */
+.foot__h::after {
+  width: 34px;
+  background: linear-gradient(90deg, var(--gold), rgb(255 198 60 / .12));
+}
+
+.foot__bottom {
+  border-top: 0;
+  position: relative;
+}
+.foot__bottom::before {
+  content: "";
+  position: absolute; inset: 0 0 auto; height: 1px;
+  background: linear-gradient(90deg,
+    rgb(255 198 60 / .34),
+    rgb(255 198 60 / .16) 48%,
+    rgb(255 198 60 / .04) 78%,
+    transparent);
+}
