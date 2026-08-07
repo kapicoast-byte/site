@@ -523,16 +523,31 @@ body.menu-open .burger span:nth-child(3) { transform: translateY(-6px) rotate(-4
   animation: slide 34s linear infinite;
 }
 .marquee:hover .marquee__track { animation-play-state: paused; }
+/* Anton, not the heading serif.
+   The band was set in --f-display, the same Rozha One as every heading on the
+   page, so it read as more headline rather than as a banner. Anton is condensed
+   and heavy — the face signwriting and fairground boards are set in — which is
+   what a scrolling strip of short claims wants. It is already in the Google
+   Fonts request for the poster type, so this costs no extra download.
+
+   Condensed letterforms can take much wider tracking before they look loose,
+   and the extra spacing is what stops a heavy weight turning into a solid bar
+   at a glance. */
 .marquee__track span {
-  font-family: var(--f-display);
-  font-size: clamp(1rem, 1.9vw, 1.45rem);
-  text-transform: uppercase; letter-spacing: .04em;
-  padding-inline: 1.1rem;
-  display: inline-flex; align-items: center; gap: 1.1rem;
+  font-family: var(--f-poster);
+  font-size: clamp(1.05rem, 2vw, 1.6rem);
+  font-weight: 400;                  /* Anton ships one weight; 700 fakes it */
+  text-transform: uppercase;
+  letter-spacing: .085em;
+  padding-inline: 1.15rem;
+  display: inline-flex; align-items: center; gap: 1.15rem;
   white-space: nowrap;
 }
 .marquee__track span::after {
-  content: "✦"; font-size: .62em; opacity: .7; font-family: var(--f-body);
+  content: "✦"; font-size: .58em; opacity: .65; font-family: var(--f-body);
+  /* Anton sits high in its box; without this the star rides above the caps
+     rather than centring on them. */
+  transform: translateY(-.04em);
 }
 @keyframes slide { to { transform: translateX(-50%); } }
 

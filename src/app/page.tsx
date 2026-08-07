@@ -185,20 +185,27 @@ export default async function Home() {
         {/* Cakes only — this band sits directly above the cake section, and
             "High tea" and "Office drops on OMR" belonged to neither.
 
-            Every line is something the site already commits to elsewhere, not a
-            claim written to fill the space: eggless pricing and the OMR
-            delivery area from the cakes page, the 48-hour minimum and the 8 am
-            collection slot from the builder's own date picker, and the hand-
-            piped message from its 40-character limit. Nothing here describes a
-            flavour or a texture, because no cake options exist yet to describe;
-            "rich", "decadent" and "freshly baked" would be filler. */}
+            "Call for flavours" is deliberate, not a placeholder. No flavour
+            list exists anywhere — cakeOptions is empty — so naming one would
+            send someone to the counter to order a cake nobody agreed to bake.
+            Pointing at the phone is the one honest thing the band can say about
+            types, and it is still useful: it asks for the call rather than
+            hoping for it.
+
+            The rest are commitments the site already makes elsewhere, so a
+            customer can hold the cafe to each: the 48-hour minimum from the
+            builder's date picker, eggless pricing and the OMR delivery area
+            from the cakes page, and "Parties & events" from this section's own
+            heading. Nothing describes a taste or a texture, because "rich" and
+            "freshly baked" are filler nobody can be held to. */}
         <Marquee
           red
           items={[
-            "Eggless at no extra charge",
-            "Writing piped by hand",
-            "Collection from 8 am",
+            "Order yours",
+            "Call for flavours",
             "48 hours' notice",
+            "Parties & events",
+            "Eggless at no extra charge",
             "Delivered along OMR",
           ]}
         />

@@ -94,7 +94,9 @@ export default async function CakesPage() {
           </div>
         </section>
 
-        <Marquee items={["Eggless at no extra charge", "Delivery across OMR", "48 hour notice"]} />
+        {/* Same wording as the home band where they overlap, so the two do not
+            state the same promise two different ways. */}
+        <Marquee items={["Eggless at no extra charge", "Delivered along OMR", "48 hours' notice"]} />
 
         {packages.length > 0 && (
           <section className="section" id="packages">
