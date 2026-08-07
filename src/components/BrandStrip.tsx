@@ -19,17 +19,31 @@ import type { BrandRow } from "@/lib/models";
 export default function BrandStrip({
   brands,
   title,
+  inline = false,
 }: {
   brands: BrandRow[];
   title: string;
+  /**
+   * Sits inside a text column rather than spanning the page.
+   *
+   * Changes more than width: a full-bleed band is a separate announcement and
+   * earns rules above and below plus a centred label, while in a column it is a
+   * continuation of the paragraph above it and should align with that text.
+   */
+  inline?: boolean;
 }) {
-  const rows = brands.filter((b) => b.name || b.logoUrl);
+  // `?? []` is not belt-and-braces. Firestore omits absent fields, so any
+  // settings document written before `brands` existed has no key for it.
+  const rows = (brands ?? []).filter((b) => b.name || b.logoUrl);
   if (!rows.length) return null;
 
   const track = [...rows, ...rows];
 
   return (
-    <section className="brandstrip" aria-label={title}>
+    <section
+      className={`brandstrip${inline ? " brandstrip--inline" : ""}`}
+      aria-label={title}
+    >
       <p className="brandstrip__label">{title}</p>
 
       <div className="brandstrip__rail">

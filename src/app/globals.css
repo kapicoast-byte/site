@@ -2488,3 +2488,33 @@ html {
      is just the same logos twice. */
   .brandstrip__item[aria-hidden="true"] { display: none; }
 }
+
+/* Inside the About Us column rather than spanning the page.
+   A full-bleed band is a separate announcement and earns rules above and below
+   plus a centred label. In a column it is a continuation of the paragraph above
+   it, so the rules come off, the label aligns left with the body text, and only
+   a hairline above keeps it from touching the owner card. */
+.brandstrip--inline {
+  border-block: 0;
+  border-top: 1px solid rgb(16 12 8 / .10);
+  margin-top: 1.8rem;
+  padding-block: 1.5rem 0;
+}
+.section:not(.on-cream) .brandstrip--inline { border-top-color: var(--line); }
+
+.brandstrip--inline .brandstrip__label {
+  text-align: left;
+  margin-bottom: 1.1rem;
+}
+
+/* Shorter here: the column is a fraction of the page width, and logos scaled
+   for a full-bleed band would crowd it. */
+.brandstrip--inline .brandstrip__item img { height: clamp(22px, 2.4vw, 30px); max-width: 140px; }
+.brandstrip--inline .brandstrip__item b { font-size: clamp(1rem, 1.5vw, 1.2rem); }
+.brandstrip--inline .brandstrip__track { gap: clamp(1.8rem, 3.5vw, 3rem); }
+
+/* The mask fades a shorter distance, in proportion to the narrower rail. */
+.brandstrip--inline .brandstrip__rail {
+  -webkit-mask-image: linear-gradient(90deg, #000 0, #000 88%, transparent);
+  mask-image: linear-gradient(90deg, #000 0, #000 88%, transparent);
+}

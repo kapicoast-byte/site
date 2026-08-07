@@ -104,10 +104,15 @@ export default async function Home() {
                 </figure>
               )}
 
-              {/* The journal link that used to sit here is gone. The home page
+              {/* Directly under the owner, in the same column, rather than as
+                  a full-width band after the section — it reads as part of who
+                  this is, not as a separate announcement.
+
+                  The journal link that used to sit here is gone. The home page
                   already carries a whole journal section further down with its
                   own "All posts" link, and the nav has a third. About Us is for
                   the company. */}
+              <BrandStrip brands={s.brands} title="Brands we own" inline />
             </div>
 
             <div className="story__stack">
@@ -127,11 +132,6 @@ export default async function Home() {
             </div>
           </div>
         </section>
-
-        {/* Directly under About Us, because it is the same subject: who this
-            is. Renders nothing until brands are added in Site settings, so the
-            page never carries an empty band while the list is being filled. */}
-        <BrandStrip brands={s.brands} title="Brands we own" />
 
         {/* ------------------------------------------------- featured ---- */}
         {featured.length > 0 && (
