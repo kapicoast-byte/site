@@ -37,7 +37,18 @@ export default function BrandStrip({
   const rows = (brands ?? []).filter((b) => b.name || b.logoUrl);
   if (!rows.length) return null;
 
-  const track = [...rows, ...rows];
+  /* The track has to be at least twice the rail's width or translateX(-50%)
+     leaves a visible hole crossing the strip — with one or two brands the loop
+     is mostly empty space with a logo drifting through it. Repeating the list
+     until each half is long enough fills the rail regardless of how many
+     brands exist, and the halves stay identical so the loop is still seamless.
+
+     Both halves are the same length by construction: `half` is built first,
+     then duplicated. Deriving the second half separately is how these end up
+     one item apart and the loop develops a jump. */
+  const perHalf = Math.max(1, Math.ceil(5 / rows.length));
+  const half = Array.from({ length: perHalf }, () => rows).flat();
+  const track = [...half, ...half];
 
   return (
     <section
@@ -55,6 +66,10 @@ export default function BrandStrip({
               /* The second pass is the same content again. Announcing it would
                  read every brand twice. */
               aria-hidden={i >= rows.length ? "true" : undefined}
+              /* Everything past the first pass is a repeat that exists only to
+                 fill the rail. With motion off there is no rail to fill, so
+                 these are hidden and each brand appears exactly once. */
+              data-dup={i >= rows.length ? "" : undefined}
             >
               {b.logoUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element

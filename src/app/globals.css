@@ -2446,13 +2446,17 @@ html {
   flex: none;
   display: inline-flex;
   align-items: center;
-  /* Held back so the strip reads as a quiet credit line rather than competing
-     with the page's own brand, and brought forward on hover. */
-  opacity: .55;
-  filter: grayscale(1);
-  transition: opacity .4s var(--ease-out-expo), filter .4s var(--ease-out-expo);
+  /* Held back a little so the strip reads as a quiet credit line rather than
+     competing with the page's own brand — but only a little.
+
+     This was opacity .55 with grayscale(1), which is the standard treatment
+     and assumes every logo is a dark full-colour mark. Against the cream
+     section it made a pale logo disappear entirely. Muting a logo until it
+     cannot be seen is not restraint, it is a broken image. */
+  opacity: .82;
+  transition: opacity .4s var(--ease-out-expo);
 }
-.brandstrip__item:hover { opacity: 1; filter: none; }
+.brandstrip__item:hover { opacity: 1; }
 
 .brandstrip__item img {
   /* Height, never width. Logos arrive at wildly different aspect ratios, and
@@ -2484,9 +2488,9 @@ html {
     justify-content: center;
     row-gap: 1.4rem;
   }
-  /* The duplicate pass exists only to make the loop seamless; with no loop it
-     is just the same logos twice. */
-  .brandstrip__item[aria-hidden="true"] { display: none; }
+  /* The repeats exist only to fill a moving rail. With no motion there is
+     nothing to fill, so each brand appears exactly once. */
+  .brandstrip__item[data-dup] { display: none; }
 }
 
 /* Inside the About Us column rather than spanning the page.

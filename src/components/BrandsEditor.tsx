@@ -61,7 +61,7 @@ export default function BrandsEditor({ brands }: { brands: BrandRow[] }) {
             uid={row.key}
             label="Logo"
             defaultValue={row.logoUrl}
-            hint="A wide wordmark or a square mark both work — they are matched by height, not width. Leave it empty and the name is set in type instead."
+            hint="A wide wordmark or a square mark both work — they are matched by height, not width. The strip sits on the cream section, so a pale logo made for a dark background will vanish there; use the dark or full-colour version. Leave it empty and the name is set in type instead, which is often the better answer."
           />
 
           <button
