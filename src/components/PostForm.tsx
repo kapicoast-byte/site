@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useActionState } from "react";
 import { savePost, type ActionState } from "@/app/admin/actions";
+import MediaField from "./MediaField";
 
 type Block = { t: "p" | "h" | "q"; c: string } | { t: "ul"; c: string[] };
 type Post = {
@@ -64,9 +65,13 @@ export default function PostForm({ post }: { post: Post }) {
           <span className="hint">Shown on the journal cards and in search results.</span>
         </div>
 
-        <div className="adm-field" style={{ marginTop: ".9rem" }}>
-          <label htmlFor="imageUrl">Header image link</label>
-          <input id="imageUrl" name="imageUrl" defaultValue={post?.imageUrl ?? ""} placeholder="/api/uploads/…" />
+        <div style={{ marginTop: ".9rem" }}>
+          <MediaField
+            name="imageUrl"
+            label="Header picture"
+            defaultValue={post?.imageUrl ?? ""}
+            hint="Runs across the top of the post and on its card in the journal list. Wide crops suit both."
+          />
         </div>
 
         <label style={{ display: "flex", gap: ".4rem", alignItems: "center", fontSize: ".9rem", marginTop: "1rem" }}>

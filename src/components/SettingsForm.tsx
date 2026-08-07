@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 import { saveSettings, type ActionState } from "@/app/admin/actions";
+import MediaField from "./MediaField";
 
 type Hours = { day: string; time: string }[];
 // Loose shape — the page passes a serialised Settings row.
@@ -68,18 +69,55 @@ export default function SettingsForm({ s, hours }: { s: S; hours: Hours }) {
       </div>
 
       <div className="adm-card">
-        <h2>Pictures &amp; video</h2>
-        <p style={{ fontSize: ".84rem", color: "var(--cream-dim)", marginBottom: "1rem" }}>
-          Upload files under <b>Images &amp; video</b>, press “Copy link”, then paste the
-          link into any box below.
+        <h2>Pictures — home page</h2>
+        <p className="adm-cardnote">
+          Choose a file and it uploads straight away, here. Pictures can be
+          cropped and turned upright before they go. Nothing changes on the site
+          until you press <b>Save changes</b> at the bottom.
         </p>
         <div className="adm-grid">
-          <Field name="logoDarkUrl" label="Logo (nav + footer)" defaultValue={v("logoDarkUrl")} hint="Shows on the dark bar." />
-          <Field name="logoUrl" label="Logo (favicon)" defaultValue={v("logoUrl")} />
-          <Field name="heroVideoUrl" label="Hero video" defaultValue={v("heroVideoUrl")} hint="MP4 or WebM." />
-          <Field name="heroPosterUrl" label="Hero still image" defaultValue={v("heroPosterUrl")} hint="Shown before the video plays." />
-          <Field name="storyImage1Url" label="Story photo 1" defaultValue={v("storyImage1Url")} />
-          <Field name="storyImage2Url" label="Story photo 2" defaultValue={v("storyImage2Url")} />
+          <MediaField
+            name="heroVideoUrl"
+            label="Hero video"
+            defaultValue={v("heroVideoUrl")}
+            video
+            hint="Plays behind the name at the very top. MP4 or WebM."
+          />
+          <MediaField
+            name="heroPosterUrl"
+            label="Hero still"
+            defaultValue={v("heroPosterUrl")}
+            hint="Held on screen while the video loads, and shown instead of it on slow connections."
+          />
+          <MediaField
+            name="storyImage1Url"
+            label="Story photo 1"
+            defaultValue={v("storyImage1Url")}
+            hint="The pair beside the story text, partway down the page."
+          />
+          <MediaField
+            name="storyImage2Url"
+            label="Story photo 2"
+            defaultValue={v("storyImage2Url")}
+          />
+        </div>
+      </div>
+
+      <div className="adm-card">
+        <h2>Pictures — every page</h2>
+        <div className="adm-grid">
+          <MediaField
+            name="logoDarkUrl"
+            label="Logo — top bar and footer"
+            defaultValue={v("logoDarkUrl")}
+            hint="Sits on the dark bar, so it needs to read against a dark background."
+          />
+          <MediaField
+            name="logoUrl"
+            label="Logo — browser tab icon"
+            defaultValue={v("logoUrl")}
+            hint="Square, and small on screen. Simple shapes survive it; fine detail does not."
+          />
         </div>
       </div>
 
@@ -104,11 +142,11 @@ export default function SettingsForm({ s, hours }: { s: S; hours: Hours }) {
         <div className="adm-grid" style={{ marginTop: ".9rem" }}>
           <Field name="ownerName" label="Name" defaultValue={v("ownerName")} hint="Shown under the note. Blank hides it." />
           <Field name="ownerRole" label="Role" defaultValue={v("ownerRole")} placeholder="Owner" />
-          <Field
+          <MediaField
             name="ownerPhotoUrl"
             label="Photo"
             defaultValue={v("ownerPhotoUrl")}
-            hint="Upload under Images & video, then paste its address here. A square photo works best."
+            hint="A square photo works best — crop it to square after choosing."
           />
         </div>
       </div>

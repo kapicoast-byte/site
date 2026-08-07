@@ -102,16 +102,57 @@ export function auth() {
   return getAuth(getApp());
 }
 
-let firestoreReady = false;
+/**
+ * Marks a Firestore instance as already configured.
+ *
+ * This deliberately hangs off the instance rather than sitting in a module
+ * variable. `settings()` may be called exactly once per instance, and the
+ * instance outlives this module: `getApp()` above adopts an existing app via
+ * `getApps()`, so a second copy of this module — a Fast Refresh in dev, a
+ * separate server bundle in production — gets back the *same* already-
+ * configured Firestore while its own module state starts empty. A module-level
+ * boolean therefore says "not configured" about an object that is, and
+ * `settings()` throws "Firestore has already been initialized", taking down
+ * every page that reads content.
+ *
+ * Keeping the mark on the instance makes the flag and the thing it describes
+ * impossible to separate. `Symbol.for` uses the cross-realm registry, so both
+ * copies of the module look up the same key.
+ */
+const CONFIGURED = Symbol.for("kapicoast.firestore.settings-applied");
 
 export function firestore() {
   const instance = getFirestore(getApp());
-  if (!firestoreReady) {
-    // Prisma returned `null` for unset optional columns; Firestore omits absent
-    // fields entirely unless told otherwise. Writing undefined as "leave this
-    // field alone" keeps partial updates behaving the way the app expects.
-    instance.settings({ ignoreUndefinedProperties: true });
-    firestoreReady = true;
+  const marked = instance as unknown as Record<symbol, true | undefined>;
+
+  if (!marked[CONFIGURED]) {
+    try {
+      // Prisma returned `null` for unset optional columns; Firestore omits
+      // absent fields entirely unless told otherwise. Writing undefined as
+      // "leave this field alone" keeps partial updates behaving the way the
+      // app expects.
+      instance.settings({
+        ignoreUndefinedProperties: true,
+        // REST instead of gRPC. Every page here does a handful of one-shot
+        // reads and then the request ends — there is no listener and nothing
+        // long-lived for a gRPC channel to amortise, so REST starts faster and
+        // has less to tear down. It also goes through Node's own TLS stack,
+        // which means NODE_EXTRA_CA_CERTS works; gRPC keeps a separate root
+        // store and fails with "unable to verify the first certificate" on any
+        // machine behind a TLS-inspecting antivirus or corporate proxy.
+        preferRest: true,
+      });
+    } catch (e) {
+      // Someone already applied them — an older copy of this module, or one
+      // that predates the mark. The setting we want is in force either way;
+      // only *re-applying* it is an error. Rethrow anything else, because a
+      // genuine failure here would silently change how writes behave.
+      if (!/already been initialized/i.test(String((e as Error).message))) throw e;
+    }
+    // Outside the try on purpose. Marking only on success would leave an
+    // already-configured instance throwing on every request forever, which is
+    // exactly the failure this replaces.
+    marked[CONFIGURED] = true;
   }
   return instance;
 }

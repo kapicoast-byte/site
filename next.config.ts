@@ -28,6 +28,10 @@ const config: NextConfig = {
 
   eslint: { ignoreDuringBuilds: true },
 
+  // Drops `X-Powered-By: Next.js`. It tells an attacker which framework and
+  // therefore which CVE list to work from, and buys nothing in return.
+  poweredByHeader: false,
+
   /**
    * Security headers.
    *
@@ -75,6 +79,21 @@ const config: NextConfig = {
           {
             key: "Permissions-Policy",
             value: "camera=(), microphone=(), geolocation=(), interest-cohort=()",
+          },
+          /* Once a browser has seen this, it refuses to speak plain HTTP to
+             this host for a year — which closes the gap where the very first
+             request to `http://…` can be intercepted before the redirect to
+             HTTPS ever arrives. The admin session cookie travels over that
+             request.
+
+             Deliberately no `includeSubDomains` and no `preload`. Both are hard
+             to undo: preload means asking browser vendors to ship the rule, and
+             removal takes months. This site is still moving between hosts, and
+             a subdomain without a certificate would simply become unreachable.
+             Add them once the real domain has settled. */
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=31536000",
           },
         ],
       },

@@ -351,3 +351,36 @@ export async function removeMedia(form: FormData) {
   await deleteUpload(str(form, "id"));
   revalidatePath("/admin/media");
 }
+
+export type UploadResult = { url?: string; error?: string };
+
+/**
+ * Upload one file and hand back its address.
+ *
+ * Called directly from the picture fields the moment a file is chosen, rather
+ * than at save time. Two reasons it works this way:
+ *
+ *   - Settings carries seven pictures. Posting them together would push a
+ *     single submit past the body limit, and the failure would come as a 500
+ *     with nothing saved rather than an error against the offending field.
+ *   - The owner sees the picture land. A form that swallows a file and only
+ *     admits it at save is how you end up publishing the wrong photo.
+ *
+ * The file is stored immediately; the *setting* still only changes on save, so
+ * abandoning the form leaves an unused file in the library and nothing else.
+ */
+export async function uploadOne(form: FormData): Promise<UploadResult> {
+  await requireAdmin();
+
+  const file = form.get("file");
+  if (!(file instanceof File) || file.size === 0) return { error: "Choose a file." };
+
+  try {
+    const media = await saveUpload(file, str(form, "alt"));
+    revalidatePath("/admin/media");
+    return { url: media.url };
+  } catch (e) {
+    if (e instanceof UploadError) return { error: e.message };
+    return { error: `Upload failed: ${(e as Error).message}` };
+  }
+}

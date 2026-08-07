@@ -46,7 +46,9 @@ export default function MediaManager({ media }: { media: Item[] }) {
               accept="image/*,video/mp4,video/webm"
             />
             <span className="hint">
-              JPG, PNG, WebP, AVIF, GIF, SVG, MP4 or WebM. Up to 25 MB each.
+              JPG, PNG, WebP, AVIF, GIF, MP4 or WebM. Up to 25 MB each. Pictures
+              are re-encoded to WebP so pages load faster. SVG is not accepted —
+              it can carry scripts, and these files are served from our own address.
             </span>
           </div>
           <div className="adm-field" style={{ marginTop: ".8rem" }}>

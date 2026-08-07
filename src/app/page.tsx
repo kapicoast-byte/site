@@ -74,13 +74,17 @@ export default async function Home() {
               {(s.ownerNote || s.ownerPhotoUrl) && (
                 <figure className="ownercard">
                   {s.ownerPhotoUrl ? (
+                    // width/height are 4:5, matching the CSS frame — they
+                    // reserve the right shape before the stylesheet or the file
+                    // has loaded, so the page does not jolt when the portrait
+                    // arrives.
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
                       className="ownercard__face"
                       src={s.ownerPhotoUrl}
                       alt={s.ownerName ? `${s.ownerName}, ${s.ownerRole}` : s.ownerRole}
-                      width={128}
-                      height={128}
+                      width={264}
+                      height={330}
                       loading="lazy"
                     />
                   ) : (
