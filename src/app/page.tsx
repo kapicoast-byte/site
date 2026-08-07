@@ -194,10 +194,10 @@ export default async function Home() {
 
             The rest are commitments the site already makes elsewhere, so a
             customer can hold the cafe to each: the 48-hour minimum from the
-            builder's date picker, eggless pricing and the OMR delivery area
-            from the cakes page, and "Parties & events" from this section's own
-            heading. Nothing describes a taste or a texture, because "rich" and
-            "freshly baked" are filler nobody can be held to. */}
+            builder's date picker, eggless pricing from the cakes page, and
+            "Parties & events" from this section's own heading. Nothing
+            describes a taste or a texture, because "rich" and "freshly baked"
+            are filler nobody can be held to. */}
         <Marquee
           red
           items={[
@@ -206,7 +206,6 @@ export default async function Home() {
             "48 hours' notice",
             "Parties & events",
             "Eggless at no extra charge",
-            "Delivered along OMR",
           ]}
         />
 
