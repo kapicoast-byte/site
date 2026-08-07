@@ -44,7 +44,6 @@ export default async function Home() {
           tagline={s.tagline}
           line1={s.heroLine1}
           line2={s.heroLine2}
-          eyebrow={s.heroEyebrow}
           badge={s.heroBadge}
           trust={s.heroTrust}
           side={s.heroSide}

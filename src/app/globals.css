@@ -548,6 +548,12 @@ body.menu-open .burger span:nth-child(3) { transform: translateY(-6px) rotate(-4
   font-weight: 400;                  /* Anton ships one weight; 700 fakes it */
   text-transform: uppercase;
   letter-spacing: .085em;
+  /* The band now carries a phone number. Proportional digits set at this
+     weight bunch and gap unevenly — a 1 takes a third the width of a 0 — which
+     makes a number look mistyped. Tabular figures give every digit the same
+     advance, so it reads as a number rather than as text that happens to be
+     numeric. */
+  font-variant-numeric: tabular-nums;
   padding-inline: 1.15rem;
   display: inline-flex; align-items: center; gap: 1.15rem;
   white-space: nowrap;
@@ -2240,4 +2246,90 @@ body::after {
   [data-reveal] { opacity: 1; transform: none; transition: none; }
   .card:hover, .pkg:hover { transform: none; }
   .btn:hover svg, .tlink:hover svg { transform: none; }
+}
+
+/* ==========================================================================
+   Footer
+   It was a four-column grid that simply began, with no edge and no hierarchy —
+   every item the same size, so the address, the opening hours and the legal
+   links all read as equally important. Nothing here changes what it says.
+   ========================================================================== */
+
+.foot {
+  position: relative;
+  /* The plain 1px rule is replaced by ::before below, which fades at both ends
+     rather than running wall to wall. */
+  border-top: 0;
+  padding-top: clamp(4rem, 8vw, 6.5rem);
+  padding-bottom: 2.4rem;
+  /* A little warmth spilling from the seam, so the footer reads as the end of
+     the page rather than a block appended to it. */
+  background: radial-gradient(130% 74% at 50% 0%, rgb(255 198 60 / .05), transparent 62%);
+}
+.foot::before {
+  content: "";
+  position: absolute; inset: 0 0 auto; height: 1px;
+  background: linear-gradient(90deg,
+    transparent,
+    rgb(255 198 60 / .34) 20%,
+    rgb(255 198 60 / .34) 80%,
+    transparent);
+}
+
+/* ---- column headings ---------------------------------------------------- */
+
+.foot__h {
+  position: relative;
+  padding-bottom: .75rem;
+  margin-bottom: 1.15rem;
+}
+/* A short kumkum rule under each heading. Gold on gold had nothing to separate
+   the label from the list beneath it. */
+.foot__h::after {
+  content: "";
+  position: absolute; left: 0; bottom: 0;
+  width: 26px; height: 2px; border-radius: 2px;
+  background: var(--kumkum-lit);
+}
+
+/* ---- address and contact ------------------------------------------------ */
+
+.foot__addr {
+  font-style: normal;                 /* <address> italicises by default */
+  font-size: var(--fs-sm);
+  line-height: 1.75;
+  color: var(--cream-dim);
+  margin-bottom: 1.1rem;
+}
+
+/* Set in the display face and sized to be read across a room, because it is
+   what someone came to the footer to find. Tabular figures so the groups line
+   up instead of drifting. */
+.foot__phone {
+  display: inline-block;
+  font-family: var(--f-display);
+  font-size: clamp(1.3rem, 2.2vw, 1.7rem);
+  line-height: 1.1;
+  color: var(--cream);
+  font-variant-numeric: tabular-nums;
+  transition: color .3s var(--ease-out-expo);
+}
+.foot__phone:hover { color: var(--gold); }
+
+.foot__mail {
+  display: block;
+  margin-top: .5rem;
+  font-size: var(--fs-sm);
+  color: var(--cream-dim);
+  transition: color .3s;
+}
+.foot__mail:hover { color: var(--gold); }
+
+/* ---- the closing line --------------------------------------------------- */
+
+.foot__bottom {
+  margin-top: clamp(2.8rem, 5vw, 4.2rem);
+  padding-top: 1.6rem;
+  align-items: center;
+  letter-spacing: .1em;
 }

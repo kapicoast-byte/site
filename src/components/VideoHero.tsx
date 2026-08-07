@@ -16,7 +16,6 @@ export default function VideoHero({
   tagline,
   line1,
   line2,
-  eyebrow,
   badge,
   trust,
   side,
@@ -28,7 +27,6 @@ export default function VideoHero({
   tagline: string;
   line1: string;
   line2: string;
-  eyebrow: string;
   badge: string;
   trust: string;
   side: string;
@@ -97,11 +95,12 @@ export default function VideoHero({
       <div className="vhero__veil" />
 
       <div className="wrap vhero__inner">
+        {/* Just the opening hours now. The location and the "Coffee · Chai ·
+            Chaat" list that used to sit here were saying again what the name,
+            the tagline and the menu already say — three labels stacked in front
+            of the reader before they reach the cafe's own name. The hours are
+            the one thing here that is useful at a glance. */}
         <p className="vhero__eyebrow">
-          <span>{eyebrow}</span>
-          <i className="dot" />
-          <span>Coffee · Chai · Chaat</span>
-          <i className="dot" />
           <span className="open">
             <i className="pulse" />
             {badge}

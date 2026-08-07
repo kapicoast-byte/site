@@ -46,19 +46,26 @@ export default function Footer({ s }: { s: SettingsRecord }) {
 
           <div>
             <h3 className="foot__h">Find us</h3>
-            <ul>
-              <li>{s.addressL1}</li>
-              <li>{s.addressL2}</li>
-              <li>{s.addressL3}</li>
-              <li>
-                <a href={`tel:${s.phone.replace(/\s/g, "")}`}>{s.phone}</a>
-              </li>
-              {s.email && (
-                <li>
-                  <a href={`mailto:${s.email}`}>{s.email}</a>
-                </li>
-              )}
-            </ul>
+            {/* An address is one thing, not a list of unrelated items — so it
+                is an <address> with line breaks rather than five <li>s, which
+                is also what a screen reader needs to read it as one block. */}
+            <address className="foot__addr">
+              {s.addressL1}
+              <br />
+              {s.addressL2}
+              <br />
+              {s.addressL3}
+            </address>
+            {/* The number is the most useful thing in a cafe's footer, so it
+                is set to be found rather than filed among the links. */}
+            <a className="foot__phone" href={`tel:${s.phone.replace(/\s/g, "")}`}>
+              {s.phone}
+            </a>
+            {s.email && (
+              <a className="foot__mail" href={`mailto:${s.email}`}>
+                {s.email}
+              </a>
+            )}
           </div>
 
           <div>
