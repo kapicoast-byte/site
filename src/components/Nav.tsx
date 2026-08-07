@@ -4,9 +4,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
+/* No "Cakes & Events" here. It and the "Order a cake" button beside it both led
+   to the same page, so the bar asked twice for one destination — and the button
+   is the clearer of the two, because it says what happens next. The page is
+   still reachable from the button, from the home page's cake section, and from
+   the footer. */
 const LINKS = [
   { href: "/menu", label: "Menu & Recipes" },
-  { href: "/cakes", label: "Cakes & Events" },
   { href: "/journal", label: "Journal" },
   { href: "/visit", label: "Visit" },
 ];

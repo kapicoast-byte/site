@@ -1994,16 +1994,31 @@ html { -webkit-tap-highlight-color: rgba(255, 198, 60, .18); }
 
 /* ---- the owner's card --------------------------------------------------- */
 
-/* Sits under the About Us intro: their picture, their words, their name. */
+/* Their picture, their words, their name.
+   Written for both states this actually occurs in — with a note and without
+   one. The version it replaces was a full-column box that, with no quote
+   written yet, was mostly empty space with a small label adrift in the middle
+   of it. A container should be the size of what it holds. */
 .ownercard {
   display: flex;
-  align-items: flex-start;
-  gap: clamp(.9rem, 2vw, 1.4rem);
+  align-items: center;
+  gap: clamp(1rem, 2.2vw, 1.5rem);
   margin: 1.8rem 0 0;
-  padding: clamp(1rem, 2vw, 1.4rem);
+  padding: clamp(.8rem, 1.6vw, 1.1rem);
   border-radius: var(--r-m);
   background: rgb(16 12 8 / .045);
   border: 1px solid rgb(16 12 8 / .10);
+  /* A quote is what earns the full column. Without one the card shrinks to the
+     portrait and its caption, so there is no void to explain. */
+  width: fit-content;
+  max-width: 100%;
+}
+/* With a note, the words lead and the picture supports them — so it spans the
+   column again and the portrait aligns to the first line rather than floating
+   against the middle of a paragraph. */
+.ownercard:has(.ownernote) {
+  width: auto;
+  align-items: flex-start;
 }
 /* The story block sits on cream; the same card on a dark section needs the
    contrast flipped rather than assumed. */
@@ -2032,9 +2047,18 @@ html { -webkit-tap-highlight-color: rgba(255, 198, 60, .18); }
      letterboxes rather than stretching a face. */
   max-height: 260px;
   object-fit: contain;
-  border-radius: calc(var(--r-m) - 4px);
-  border: 2px solid var(--gold);
-  box-shadow: 0 6px 18px rgb(0 0 0 / .28);
+  /* A photographic print, not a badge.
+     A 2px gold rule straight against the image edge read as a sticker, and it
+     fought the passport photograph's own white background. The mat gives the
+     picture a border of its own to sit in — padding on an <img> is drawn in the
+     background colour, so this needs no extra element — and the frame steps
+     down to a hairline. Gold survives as a hint in the shadow rather than a
+     ring around a face. */
+  padding: 6px;
+  background: var(--milk);
+  border: 1px solid rgb(16 12 8 / .16);
+  border-radius: calc(var(--r-m) - 5px);
+  box-shadow: 0 8px 22px rgb(16 12 8 / .18);
 }
 /* The silhouette shown until a real photograph is uploaded. It is an empty
    <span>, so it has no intrinsic proportions to borrow — without a stated one
@@ -2062,11 +2086,10 @@ html { -webkit-tap-highlight-color: rgba(255, 198, 60, .18); }
 .ownernote::after  { content: "\201D"; }
 .section:not(.on-cream) .ownernote { color: var(--cream); }
 
-/* No quote yet, so the caption is the only thing beside the picture — it sits
-   centred against it rather than pinned to the top of an empty column. */
-.ownercard__body { display: grid; align-content: center; min-height: clamp(76px, 11vw, 128px); }
-.ownersig { margin-top: .9rem; }
-.ownercard__body:not(:has(.ownernote)) .ownersig { margin-top: 0; }
+/* The caption sits centred against the picture. No min-height any more: it was
+   set to the old 128px frame, and with the portrait now taller than that it
+   only ever propped open space nothing filled. Height comes from the contents. */
+.ownercard__body { display: grid; align-content: center; gap: .8rem; }
 .ownersig b {
   display: block;
   font-family: var(--f-display);
@@ -2079,6 +2102,17 @@ html { -webkit-tap-highlight-color: rgba(255, 198, 60, .18); }
   font-size: var(--fs-caps); letter-spacing: .18em; text-transform: uppercase;
   color: var(--kumkum);
   margin-top: .18rem;
+}
+/* No name set, so the role is the whole caption. A short rule above it makes it
+   read as a deliberate label rather than one small word left on its own — and
+   it is the only place the brand gold appears now the portrait no longer wears
+   a ring of it. `b` is rendered only when a name exists, so this state ends by
+   itself the moment one is typed in. */
+.ownersig:not(:has(b)) small {
+  display: inline-block;
+  margin-top: 0;
+  padding-top: .55rem;
+  border-top: 2px solid var(--gold);
 }
 
 @media (max-width: 560px) {
