@@ -41,6 +41,27 @@ services:
     networks:
       - dokploy-network
 
+    # Is the server actually answering, as opposed to the process merely being
+    # alive? During a deploy that is the question worth asking: the container
+    # exists for a couple of seconds before Next binds the port, and "running"
+    # says yes the whole time.
+    #
+    # /admin/login on purpose. It is the one prerendered static route in the
+    # build, so it proves Next is serving without depending on Firestore. A
+    # check against / would fail whenever Google was unreachable and report a
+    # network problem as a dead container.
+    #
+    # wget, not curl: the image is node:22-alpine, where wget is busybox's and
+    # curl is not installed.
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:3000/admin/login"]
+      interval: 15s
+      timeout: 4s
+      retries: 3
+      # Failures before this elapses do not count against `retries`, so a slow
+      # boot is never mistaken for a broken one.
+      start_period: 25s
+
 volumes:
   uploads:
 
