@@ -72,6 +72,19 @@ export async function saveSettings(_prev: unknown, form: FormData): Promise<Acti
     "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday",
   ].map((day) => ({ day, time: str(form, `hours_${day}`) }));
 
+  /* Every brand row posts under the same two names, so these arrive as two
+     parallel arrays in document order — which is also the order they appear on
+     the site. Zipped by position rather than by an index baked into the field
+     names, so a row can be deleted from the middle without renumbering.
+
+     A row with neither a name nor a logo is dropped: that is an empty row
+     someone added and then thought better of, not a brand. */
+  const brandNames = form.getAll("brandName").map(String).map((v) => v.trim());
+  const brandLogos = form.getAll("brandLogo").map(String).map((v) => v.trim());
+  const brands = brandNames
+    .map((name, i) => ({ name, logoUrl: brandLogos[i] ?? "" }))
+    .filter((b) => b.name || b.logoUrl);
+
   await db.settings.update({
     where: { id: 1 },
     data: {
@@ -103,6 +116,7 @@ export async function saveSettings(_prev: unknown, form: FormData): Promise<Acti
       mapsQuery: str(form, "mapsQuery"),
       hours,
       marquee: lines(form, "marquee"),
+      brands,
     },
   });
 

@@ -14,6 +14,15 @@
 export type Ingredient = { amt: string; txt: string };
 export type HoursRow = { day: string; time: string };
 
+/**
+ * One business in the group, for the strip on the home page.
+ *
+ * Both fields optional in practice: a brand with a name and no logo shows its
+ * name set in type, which is the sensible fallback while logos are still being
+ * gathered rather than a gap in the row.
+ */
+export type BrandRow = { name: string; logoUrl: string };
+
 export type Category = {
   id: string;
   slug: string;
@@ -164,6 +173,7 @@ export type Settings = {
 
   hours: HoursRow[];
   marquee: string[];
+  brands: BrandRow[];
 
   updatedAt: Date;
 };
@@ -204,4 +214,5 @@ export const SETTINGS_DEFAULTS: Omit<Settings, "id" | "updatedAt"> = {
 
   hours: [],
   marquee: [],
+  brands: [],
 };

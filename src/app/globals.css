@@ -2398,3 +2398,93 @@ html {
     rgb(255 198 60 / .04) 78%,
     transparent);
 }
+
+/* ==========================================================================
+   Brand strip — the other businesses in the group
+   ========================================================================== */
+
+.brandstrip {
+  padding-block: clamp(2.2rem, 4vw, 3.2rem);
+  /* Hairlines top and bottom rather than a filled band, so it separates the
+     two sections it sits between without becoming a third one. */
+  border-block: 1px solid rgb(16 12 8 / .10);
+}
+.section:not(.on-cream) + .brandstrip,
+.brandstrip.on-dark { border-block-color: var(--line); }
+
+.brandstrip__label {
+  text-align: center;
+  font-size: var(--fs-caps);
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--kumkum);
+  margin-bottom: clamp(1.2rem, 2.4vw, 1.8rem);
+}
+
+/* The rail masks the ends so brands fade out instead of being guillotined at
+   the edge of the viewport. */
+.brandstrip__rail {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.brandstrip__track {
+  display: flex;
+  align-items: center;
+  gap: clamp(2.5rem, 6vw, 5rem);
+  width: max-content;
+  /* -50% is exactly one copy of the list, so the second lands where the first
+     began and the loop has no seam. */
+  animation: brandslide 38s linear infinite;
+}
+.brandstrip:hover .brandstrip__track { animation-play-state: paused; }
+@keyframes brandslide { to { transform: translateX(-50%); } }
+
+.brandstrip__item {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  /* Held back so the strip reads as a quiet credit line rather than competing
+     with the page's own brand, and brought forward on hover. */
+  opacity: .55;
+  filter: grayscale(1);
+  transition: opacity .4s var(--ease-out-expo), filter .4s var(--ease-out-expo);
+}
+.brandstrip__item:hover { opacity: 1; filter: none; }
+
+.brandstrip__item img {
+  /* Height, never width. Logos arrive at wildly different aspect ratios, and
+     sizing by width makes a wide wordmark tiny next to a square mark. Matching
+     their heights is what makes a mixed row look set rather than collected. */
+  height: clamp(26px, 3.4vw, 42px);
+  width: auto;
+  max-width: 190px;
+  object-fit: contain;
+  display: block;
+}
+
+/* The fallback while a logo is still to come. */
+.brandstrip__item b {
+  font-family: var(--f-display);
+  font-weight: 400;
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
+  letter-spacing: .01em;
+  white-space: nowrap;
+  color: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Still readable, just not moving: it becomes a centred row that wraps. */
+  .brandstrip__track {
+    animation: none;
+    width: auto;
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 1.4rem;
+  }
+  /* The duplicate pass exists only to make the loop seamless; with no loop it
+     is just the same logos twice. */
+  .brandstrip__item[aria-hidden="true"] { display: none; }
+}

@@ -1,5 +1,6 @@
 import "server-only";
 import { db } from "./db";
+import { SETTINGS_DEFAULTS } from "./models";
 
 export type Hours = { day: string; time: string }[];
 
@@ -19,7 +20,22 @@ const DEFAULT_HOURS: Hours = [
  */
 export async function getSettings() {
   const existing = await db.settings.findUnique({ where: { id: 1 } });
-  if (existing) return existing;
+
+  /* Defaults underneath, stored values on top.
+     Firestore omits absent fields entirely, so a document written before a
+     field existed simply has no key for it — and every field added to the
+     model from then on arrives as `undefined` at runtime while TypeScript goes
+     on promising it is there. That is how `brands` would have reached
+     BrandStrip as undefined and thrown on .filter().
+     Merging here fixes it once for every field, present and future, instead of
+     each reader guarding its own — which is what hoursOf below already had to
+     do by hand. */
+  if (existing) {
+    const stored = Object.fromEntries(
+      Object.entries(existing).filter(([, v]) => v !== undefined),
+    );
+    return { ...SETTINGS_DEFAULTS, ...stored } as typeof existing;
+  }
 
   return db.settings.create({
     data: {

@@ -7,6 +7,7 @@ import Marquee from "@/components/Marquee";
 import VideoHero from "@/components/VideoHero";
 import MapEmbed from "@/components/MapEmbed";
 import CakeShowpiece from "@/components/CakeShowpiece";
+import BrandStrip from "@/components/BrandStrip";
 
 export const dynamic = "force-dynamic";
 
@@ -103,9 +104,10 @@ export default async function Home() {
                 </figure>
               )}
 
-              <p style={{ marginTop: "2rem" }}>
-                <Link className="tlink" href="/journal">Read the journal →</Link>
-              </p>
+              {/* The journal link that used to sit here is gone. The home page
+                  already carries a whole journal section further down with its
+                  own "All posts" link, and the nav has a third. About Us is for
+                  the company. */}
             </div>
 
             <div className="story__stack">
@@ -125,6 +127,11 @@ export default async function Home() {
             </div>
           </div>
         </section>
+
+        {/* Directly under About Us, because it is the same subject: who this
+            is. Renders nothing until brands are added in Site settings, so the
+            page never carries an empty band while the list is being filled. */}
+        <BrandStrip brands={s.brands} title="Brands we own" />
 
         {/* ------------------------------------------------- featured ---- */}
         {featured.length > 0 && (

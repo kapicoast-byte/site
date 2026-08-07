@@ -24,6 +24,7 @@ export default function MediaField({
   hint,
   video = false,
   crop = true,
+  uid,
 }: {
   name: string;
   label: string;
@@ -33,6 +34,14 @@ export default function MediaField({
   video?: boolean;
   /** Offer the cropper before uploading. */
   crop?: boolean;
+  /**
+   * Makes the file input's id unique when `name` is deliberately repeated.
+   *
+   * The brands editor posts every row under the same `name` so the action can
+   * read them with getAll() in document order. Without this the ids would
+   * collide and every row's label would open the first row's file picker.
+   */
+  uid?: string;
 }) {
   const [url, setUrl] = useState(defaultValue);
   const [busy, setBusy] = useState(false);
@@ -40,6 +49,7 @@ export default function MediaField({
   const [cropping, setCropping] = useState<File | null>(null);
   const [mounted, setMounted] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+  const fieldId = `${name}${uid ? "_" + uid : ""}__file`;
 
   // The cropper is rendered into <body>, which does not exist during the
   // server render.
@@ -78,7 +88,7 @@ export default function MediaField({
 
   return (
     <div className="adm-field adm-mf">
-      <label htmlFor={`${name}__file`}>{label}</label>
+      <label htmlFor={fieldId}>{label}</label>
 
       {/* What the form actually saves. */}
       <input type="hidden" name={name} value={url} />
@@ -130,7 +140,7 @@ export default function MediaField({
 
       <input
         ref={fileRef}
-        id={`${name}__file`}
+        id={fieldId}
         type="file"
         accept={video ? "video/mp4,video/webm" : "image/*"}
         hidden

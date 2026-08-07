@@ -3,6 +3,8 @@
 import { useActionState } from "react";
 import { saveSettings, type ActionState } from "@/app/admin/actions";
 import MediaField from "./MediaField";
+import BrandsEditor from "./BrandsEditor";
+import type { BrandRow } from "@/lib/models";
 
 type Hours = { day: string; time: string }[];
 // Loose shape — the page passes a serialised Settings row.
@@ -36,7 +38,15 @@ function Field({
   );
 }
 
-export default function SettingsForm({ s, hours }: { s: S; hours: Hours }) {
+export default function SettingsForm({
+  s,
+  hours,
+  brands,
+}: {
+  s: S;
+  hours: Hours;
+  brands: BrandRow[];
+}) {
   const [state, action, pending] = useActionState<ActionState, FormData>(saveSettings, null);
   const v = (k: string) => String(s[k] ?? "");
 
@@ -178,6 +188,17 @@ export default function SettingsForm({ s, hours }: { s: S; hours: Hours }) {
             </div>
           ))}
         </div>
+      </div>
+
+      <div className="adm-card">
+        <h2>Brands we own</h2>
+        <p className="adm-cardnote">
+          The strip that scrolls under the About Us section on the home page.
+          Logos are matched by height, so a wide wordmark and a square mark sit
+          together properly. A brand with no logo yet shows its name set in
+          type. The whole strip is hidden while this list is empty.
+        </p>
+        <BrandsEditor brands={brands} />
       </div>
 
       <div className="adm-card">

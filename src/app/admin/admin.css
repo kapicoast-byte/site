@@ -356,3 +356,23 @@
 .adm-mf__buttons { display: flex; gap: .4rem; flex-wrap: wrap; }
 .adm-mf__side .adm-btn { padding: .35rem .8rem; min-height: 0; font-size: .74rem; }
 .adm-mf__err { color: var(--kumkum-lit); }
+
+/* ---- brands editor ------------------------------------------------------ */
+
+.adm-brandrow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) auto;
+  gap: .9rem;
+  align-items: start;
+  padding: .9rem;
+  margin-bottom: .8rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--ink);
+}
+.adm-brandrow__x { align-self: center; padding: .35rem .8rem; min-height: 0; font-size: .74rem; }
+
+@media (max-width: 760px) {
+  .adm-brandrow { grid-template-columns: 1fr; }
+  .adm-brandrow__x { justify-self: start; }
+}
