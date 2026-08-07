@@ -2518,3 +2518,184 @@ html {
   -webkit-mask-image: linear-gradient(90deg, #000 0, #000 88%, transparent);
   mask-image: linear-gradient(90deg, #000 0, #000 88%, transparent);
 }
+
+/* ==========================================================================
+   Fan-out hero
+   Copy on the left, a fan of cards on the right that blooms open on arrival
+   and leans with the pointer.
+   ========================================================================== */
+
+.fanhero {
+  position: relative;
+  padding-block: clamp(2.5rem, 6vh, 5rem) clamp(4rem, 9vh, 7rem);
+  overflow: hidden;
+  background:
+    radial-gradient(120% 80% at 78% 12%, rgb(255 198 60 / .07), transparent 58%),
+    radial-gradient(90% 70% at 0% 100%, rgb(196 64 42 / .08), transparent 60%);
+}
+
+.fanhero__grid {
+  display: grid;
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 960px) {
+  .fanhero__grid { grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr); }
+}
+
+/* ---- copy --------------------------------------------------------------- */
+
+.fanhero__eyebrow { margin-bottom: clamp(.9rem, 2vh, 1.4rem); }
+
+.fanhero__title {
+  font-family: var(--f-poster);
+  font-weight: 400;
+  font-size: clamp(2.6rem, 7.4vw, 6.4rem);
+  line-height: .86;
+  letter-spacing: -.005em;
+  text-transform: uppercase;
+  color: var(--cream);
+  margin-bottom: clamp(.7rem, 1.6vh, 1.1rem);
+}
+.fanhero__name { display: block; }
+.fanhero__title .ta {
+  display: block;
+  font-family: var(--f-tamil); font-weight: 600;
+  font-size: clamp(1.05rem, 2.4vw, 2rem);
+  line-height: 1.2; letter-spacing: .02em;
+  text-transform: none;
+  color: var(--gold);
+  margin-top: clamp(.4rem, 1vh, .8rem);
+}
+
+.fanhero__tagline {
+  font-size: var(--fs-caps); letter-spacing: .26em; text-transform: uppercase;
+  font-weight: 700; color: var(--kumkum-lit);
+  margin-bottom: clamp(.9rem, 2vh, 1.3rem);
+}
+.fanhero__sub {
+  font-size: clamp(1rem, 1.3vw, 1.18rem);
+  color: var(--cream-dim);
+  max-width: 46ch;
+  text-wrap: pretty;
+  margin-bottom: clamp(1.4rem, 3vh, 2rem);
+}
+.fanhero__row { display: flex; gap: .7rem; flex-wrap: wrap; }
+.fanhero__trust {
+  margin-top: clamp(1.1rem, 2.4vh, 1.7rem);
+  font-size: var(--fs-caps); letter-spacing: .16em; text-transform: uppercase;
+  color: var(--cream-dim);
+  display: flex; align-items: center; gap: .55rem;
+}
+.fanhero__trust .dots i { color: var(--gold); display: inline-flex; }
+.fanhero__trust .dots svg { width: 13px; height: 13px; }
+
+/* ---- the magnetic button ------------------------------------------------ */
+
+/* --mx/--my are written by script from the pointer's distance. The transition
+   is what makes releasing feel elastic: the pull updates every frame while the
+   hand is near, then springs back in one move when it leaves. */
+.btn--magnet {
+  transform: translate(var(--mx, 0px), var(--my, 0px));
+  transition:
+    transform .45s var(--ease-out-expo),
+    background .3s, color .3s, box-shadow .35s var(--ease-out-expo);
+}
+.btn--magnet:hover { transform: translate(var(--mx, 0px), var(--my, 0px)) translateY(-2px); }
+
+/* ---- the fan ------------------------------------------------------------ */
+
+.fanhero__stage {
+  position: relative;
+  aspect-ratio: 5 / 4;
+  /* Keeps the outermost leaves from being clipped by the section edge on
+     narrower desktops. */
+  margin-inline: clamp(0px, 2vw, 2rem);
+}
+
+.fanhero__card {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: var(--w);
+  aspect-ratio: 4 / 5;
+  /* The card owns the resting transform — the fan position. Parallax is on the
+     child, because two rules cannot both write `transform` on one element and
+     the last one wins. */
+  transform:
+    translate(-50%, -50%)
+    translate(var(--x), var(--y))
+    rotate(var(--r));
+  animation: fanbloom .9s var(--ease-out-expo) both;
+  animation-delay: var(--delay, 0s);
+}
+
+/* Opens from a squared-up stack at the centre. Every card starts in the same
+   place, so the fan reads as one object coming apart rather than five things
+   arriving separately. */
+@keyframes fanbloom {
+  from {
+    transform: translate(-50%, -50%) translate(0, 0) rotate(0deg) scale(.86);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -50%) translate(var(--x), var(--y)) rotate(var(--r));
+    opacity: 1;
+  }
+}
+
+.fanhero__inner {
+  width: 100%; height: 100%;
+  border-radius: var(--r-l);
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / .09);
+  box-shadow: var(--elev-2), var(--lit-edge);
+  transform: translate3d(
+    calc(var(--px, 0px) * var(--depth)),
+    calc(var(--py, 0px) * var(--depth)),
+    0
+  );
+  /* No transition. The easing already happens in the rAF loop; adding one here
+     would smooth an already-smoothed value and lag the pointer visibly. */
+}
+.fanhero__inner img,
+.fanhero__inner video {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ---- side label and cue ------------------------------------------------- */
+
+.fanhero__side {
+  position: absolute; right: clamp(.9rem, 2.2vw, 2rem); top: 50%;
+  transform: translateY(-50%) rotate(180deg);
+  writing-mode: vertical-rl;
+  font-size: var(--fs-micro);
+  letter-spacing: .34em; text-transform: uppercase; font-weight: 700;
+  color: rgba(244,232,213,.5);
+  pointer-events: none;
+}
+@media (max-width: 1200px) { .fanhero__side { display: none; } }
+
+.fanhero__cue {
+  position: absolute; left: 50%; bottom: clamp(.8rem, 2vh, 1.4rem);
+  transform: translateX(-50%);
+  display: grid; justify-items: center; gap: .5rem;
+  font-size: var(--fs-micro);
+  letter-spacing: .3em; text-transform: uppercase;
+  color: var(--cream-dim);
+}
+.fanhero__cue .bar {
+  width: 1px; height: 34px;
+  background: linear-gradient(var(--gold), transparent);
+  animation: cue 2.4s var(--ease) infinite;
+}
+@media (max-width: 700px) { .fanhero__cue { display: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  /* The global rule already collapses the animation to 1ms; `both` fill means
+     the cards land in their fanned positions rather than vanishing. Parallax
+     is refused in the component, so --px/--py stay at 0. */
+  .btn--magnet, .btn--magnet:hover { transform: none; }
+}
