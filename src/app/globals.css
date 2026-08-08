@@ -2021,115 +2021,114 @@ html { -webkit-tap-highlight-color: rgba(255, 198, 60, .18); }
 
 /* ---- the owner's card --------------------------------------------------- */
 
-/* Their picture, their words, their name.
-   Written for both states this actually occurs in — with a note and without
-   one. The version it replaces was a full-column box that, with no quote
-   written yet, was mostly empty space with a small label adrift in the middle
-   of it. A container should be the size of what it holds. */
+/* Built to the reference: the name large and letterspaced at the top, a short
+   piece of body copy under it, the role last, and the portrait alongside
+   bleeding to the card's edge.
+   
+   What this replaces read as a photo with a paragraph beside it. The order is
+   the point — you meet the person, then read what they say, then see what they
+   do. Everything is one grid on the card itself; `display: contents` dissolves
+   the body's box so its children place independently without changing markup. */
 .ownercard {
-  display: flex;
-  align-items: center;
-  gap: clamp(.9rem, 1.8vw, 1.25rem);
-  margin: 1.5rem 0 0;
-  /* Tightened. With a quote in it the card is the largest thing in the column,
-     and the previous padding plus a 148px portrait made it a box with a lot of
-     air and not much in it. */
-  padding: clamp(.7rem, 1.3vw, .95rem);
+  /* Named because the portrait's negative margin has to cancel exactly this.
+     Written twice as two clamps, they drift the moment either is edited. */
+  --pad-card: clamp(1.1rem, 2.2vw, 1.7rem);
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(118px, 30%, 196px);
+  grid-template-areas:
+    "name face"
+    "note face"
+    "sig  face";
+  align-content: start;
+  gap: .65rem clamp(1rem, 2.4vw, 1.7rem);
+  margin: 1.6rem 0 0;
+  padding: var(--pad-card);
   border-radius: var(--r-m);
-  background: rgb(16 12 8 / .045);
+  background: rgb(16 12 8 / .05);
   border: 1px solid rgb(16 12 8 / .10);
+  /* So the portrait can run to the edges without escaping the rounded corner. */
+  overflow: hidden;
   max-width: 100%;
 }
-/* Shrink-to-fit ONLY with no quote in it. Applied unconditionally, fit-content
-   resolves toward max-content — the quote's full unwrapped length — and the
-   card grows past the column and off the screen. */
-.ownercard:not(:has(.ownernote)) {
-  width: fit-content;
-}
-/* With a quote, the quote leads and the person signs underneath it — the way a
-   pull quote is set in print, rather than a portrait with text beside it.
-   `display: contents` on the body dissolves its box so the blockquote and the
-   caption become grid items of the card itself and can be placed
-   independently, without changing the markup. */
-.ownercard:has(.ownernote) {
-  width: auto;
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  grid-template-areas:
-    "quote quote"
-    "face  sig";
-  gap: clamp(.8rem, 1.8vw, 1.2rem) clamp(.9rem, 2vw, 1.3rem);
-  align-items: center;
-  padding: clamp(1rem, 2vw, 1.5rem);
-}
-.ownercard:has(.ownernote) .ownercard__body { display: contents; }
-.ownercard:has(.ownernote) .ownernote { grid-area: quote; }
-.ownercard:has(.ownernote) .ownercard__face { grid-area: face; align-self: center; }
-.ownercard:has(.ownernote) .ownersig { grid-area: sig; }
-
-/* The quote is the largest thing in the block, because it is the point of it. */
-.ownercard:has(.ownernote) .ownernote {
-  font-size: clamp(1.15rem, 1.9vw, 1.6rem);
-  line-height: 1.42;
-}
-/* A real opening mark, hung outside the text so the first line still aligns
-   with everything below it. */
-.ownercard:has(.ownernote) .ownernote::before {
-  content: "C";
-  color: var(--gold);
-  font-size: 1.9em;
-  line-height: 0;
-  vertical-align: -.32em;
-  margin-right: .06em;
-}
-/* The story block sits on cream; the same card on a dark section needs the
-   contrast flipped rather than assumed. */
 .section:not(.on-cream) .ownercard {
   background: rgb(244 232 213 / .04);
   border-color: var(--line);
 }
+.ownercard__body { display: contents; }
 
-/* The whole picture, uncropped.
-   There is deliberately no aspect-ratio and no `cover` here. Every fixed frame
-   is a decision to throw part of the photograph away — the circle this replaced
-   was a square crop that took 22% off the sides of the owner's face. Given only
-   a width and `height: auto`, the image renders at its own proportions, so the
-   frame takes the shape of the picture instead of the picture being cut to fit
-   the frame.
-
-   `height: auto` is not redundant: the <img> carries width and height
-   attributes so its space is reserved before the file arrives, and those map to
-   presentational `height`. Without this they would pin the box to the attribute
-   height and the real proportions would never apply. */
-.ownercard__face {
-  /* Smaller than it was. The portrait supports the quote; at 148px it was
-     competing with it, and the card had to grow to hold both. */
-  width: clamp(82px, 9.5vw, 116px);
-  height: auto;
-  flex: none;
-  /* Only bites on an unusually tall photograph. `contain` means that case
-     letterboxes rather than stretching a face. */
-  max-height: 190px;
-  object-fit: contain;
-  /* A photographic print, not a badge.
-     A 2px gold rule straight against the image edge read as a sticker, and it
-     fought the passport photograph's own white background. The mat gives the
-     picture a border of its own to sit in — padding on an <img> is drawn in the
-     background colour, so this needs no extra element — and the frame steps
-     down to a hairline. Gold survives as a hint in the shadow rather than a
-     ring around a face. */
-  padding: 6px;
-  background: var(--milk);
-  border: 1px solid rgb(16 12 8 / .16);
-  border-radius: calc(var(--r-m) - 5px);
-  box-shadow: 0 8px 22px rgb(16 12 8 / .18);
+.ownercard__name {
+  grid-area: name;
+  margin: 0;
+  font-family: var(--f-display);
+  font-weight: 400;
+  font-size: clamp(1.3rem, 2.5vw, 2.05rem);
+  line-height: 1.12;
+  /* Wide tracking is what makes a name read as a masthead rather than a label.
+     It only works at this size and only in caps. */
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-wrap: balance;
 }
-/* The silhouette shown until a real photograph is uploaded. It is an empty
-   <span>, so it has no intrinsic proportions to borrow — without a stated one
-   it collapses to zero height and disappears. A portrait shape, because that is
-   what will replace it. */
+.section:not(.on-cream) .ownercard__name { color: var(--cream); }
+
+/* Body copy, not a pull quote. The quote marks are gone with the treatment:
+   this is a description of the person, and setting it as a quotation was what
+   made it need to be large, which was what made the card enormous. */
+.ownernote {
+  grid-area: note;
+  margin: 0;
+  font-family: var(--f-body);
+  font-size: clamp(.86rem, 1vw, .95rem);
+  line-height: 1.62;
+  color: #5A4A38;
+  max-width: 36ch;
+  text-wrap: pretty;
+}
+.ownernote::before,
+.ownernote::after { content: none; }
+.section:not(.on-cream) .ownernote { color: var(--cream-dim); }
+
+.ownersig { grid-area: sig; align-self: end; margin-top: .35rem; }
+.ownersig small {
+  display: block;
+  font-size: var(--fs-caps);
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--ink);
+}
+.section:not(.on-cream) .ownersig small { color: var(--cream); }
+
+/* Runs to three edges of the card. The negative margin cancels the padding
+   exactly, which is why the padding is a named custom property. */
+.ownercard__face {
+  grid-area: face;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  object-fit: cover;
+  object-position: 50% 20%;
+  align-self: stretch;
+  margin: calc(var(--pad-card) * -1) calc(var(--pad-card) * -1) calc(var(--pad-card) * -1) 0;
+  /* Greyscale, as in the reference — it stops one photograph's colour cast
+     fighting the page, and it flatters a picture taken in whatever light was
+     available rather than a studio. */
+  filter: grayscale(1) contrast(1.03);
+  /* Everything the framed version set, undone: no mat, no border, no radius. */
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  max-height: none;
+}
+
 .ownercard__face--blank {
-  aspect-ratio: 4 / 5;
+  aspect-ratio: auto;
+  min-height: 190px;
+  filter: none;
   background:
     radial-gradient(circle at 50% 34%, var(--cream-dim) 0 22%, transparent 23%),
     radial-gradient(ellipse at 50% 96%, var(--cream-dim) 0 40%, transparent 41%),
@@ -2137,53 +2136,22 @@ html { -webkit-tap-highlight-color: rgba(255, 198, 60, .18); }
   opacity: .6;
 }
 
-.ownercard__body { min-width: 0; }
-
-.ownernote {
-  margin: 0;
-  font-family: var(--f-display);
-  font-size: clamp(1rem, 1.45vw, 1.24rem);
-  line-height: 1.5;
-  color: var(--ink);
-  text-wrap: pretty;
-}
-.ownernote::before { content: "\201C"; }
-.ownernote::after  { content: "\201D"; }
-.section:not(.on-cream) .ownernote { color: var(--cream); }
-
-/* The caption sits centred against the picture. No min-height any more: it was
-   set to the old 128px frame, and with the portrait now taller than that it
-   only ever propped open space nothing filled. Height comes from the contents. */
-.ownercard__body { display: grid; align-content: center; gap: .8rem; }
-.ownersig b {
-  display: block;
-  font-family: var(--f-display);
-  font-size: 1.1rem; font-weight: 400;
-  color: var(--ink);
-}
-.section:not(.on-cream) .ownersig b { color: var(--cream); }
-.ownersig small {
-  display: block;
-  font-size: var(--fs-caps); letter-spacing: .18em; text-transform: uppercase;
-  color: var(--kumkum);
-  margin-top: .18rem;
-}
-/* No name set, so the role is the whole caption. A short rule above it makes it
-   read as a deliberate label rather than one small word left on its own — and
-   it is the only place the brand gold appears now the portrait no longer wears
-   a ring of it. `b` is rendered only when a name exists, so this state ends by
-   itself the moment one is typed in. */
-.ownersig:not(:has(b)) small {
-  display: inline-block;
-  margin-top: 0;
-  padding-top: .55rem;
-  border-top: 2px solid var(--gold);
-}
-
-@media (max-width: 560px) {
-  /* Stacks rather than squeezing the quote into a narrow column beside the
-     photo, where the display face would break badly. */
-  .ownercard { flex-direction: column; align-items: center; text-align: center; }
+@media (max-width: 640px) {
+  /* Stacks: portrait first, then the name and copy. A 196px column of face
+     beside a display name at this width squeezes both. */
+  .ownercard {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "face"
+      "name"
+      "note"
+      "sig";
+  }
+  .ownercard__face {
+    height: 210px;
+    min-height: 0;
+    margin: calc(var(--pad-card) * -1) calc(var(--pad-card) * -1) .4rem;
+  }
 }
 
 /* ==========================================================================
@@ -2246,7 +2214,11 @@ html { -webkit-tap-highlight-color: rgba(255, 198, 60, .18); }
 }
 
 .ownercard, .story__img { box-shadow: var(--elev-1), var(--lit-edge); }
-.ownercard__face { box-shadow: var(--elev-2); }
+/* No shadow on .ownercard__face any more. It was written when the portrait was
+   a framed print floating on the card; it now runs to three of the card's
+   edges, and a drop shadow on an image that bleeds is a shadow cast onto
+   nothing. This rule sits after the card's own, so leaving it here would have
+   quietly reinstated what that rule removes. */
 
 /* ---- press physics ------------------------------------------------------ */
 

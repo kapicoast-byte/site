@@ -88,8 +88,25 @@ export default async function Home() {
                   and the name only appear once they have actually been written.
                   Nothing is published under a real person's name unless that
                   person typed it. Both are set in Admin -> Site settings. */}
+              {/* Name first and large, the note beneath it as body copy, the
+                  role last, and the portrait alongside — the order a profile
+                  is actually read in. The name used to sit under the note in a
+                  caption, which made the whole block a photo with a paragraph
+                  next to it rather than an introduction to a person. */}
               {(s.ownerNote || s.ownerPhotoUrl) && (
                 <figure className="ownercard">
+                  <div className="ownercard__body">
+                    {s.ownerName && <p className="ownercard__name">{s.ownerName}</p>}
+                    {/* Guarded: an empty blockquote would still paint its
+                        pseudo-element quote marks as a bare “” . */}
+                    {s.ownerNote && (
+                      <blockquote className="ownernote">{s.ownerNote}</blockquote>
+                    )}
+                    <figcaption className="ownersig">
+                      <small>{s.ownerRole}</small>
+                    </figcaption>
+                  </div>
+
                   {s.ownerPhotoUrl ? (
                     // width/height are 4:5, matching the CSS frame — they
                     // reserve the right shape before the stylesheet or the file
@@ -107,17 +124,6 @@ export default async function Home() {
                   ) : (
                     <span className="ownercard__face ownercard__face--blank" aria-hidden="true" />
                   )}
-                  <div className="ownercard__body">
-                    {/* Guarded: the quote marks are pseudo-elements, so an
-                        empty blockquote would still paint a bare “” . */}
-                    {s.ownerNote && (
-                      <blockquote className="ownernote">{s.ownerNote}</blockquote>
-                    )}
-                    <figcaption className="ownersig">
-                      {s.ownerName && <b>{s.ownerName}</b>}
-                      <small>{s.ownerRole}</small>
-                    </figcaption>
-                  </div>
                 </figure>
               )}
 
