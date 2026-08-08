@@ -50,7 +50,8 @@ export default async function Home() {
           side={s.heroSide}
         />
 
-        <Marquee items={s.marquee} />
+        {/* The number in the band is the thing you press, not a number to retype. */}
+        <Marquee items={s.marquee} whatsapp={s.whatsapp} />
 
         {/* ---------------------------------------------------- story ---- */}
         <section className="section on-cream">

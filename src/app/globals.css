@@ -532,37 +532,43 @@ body.menu-open .burger span:nth-child(3) { transform: translateY(-6px) rotate(-4
   animation: slide 34s linear infinite;
 }
 .marquee:hover .marquee__track { animation-play-state: paused; }
-/* Anton, not the heading serif.
-   The band was set in --f-display, the same Rozha One as every heading on the
-   page, so it read as more headline rather than as a banner. Anton is condensed
-   and heavy — the face signwriting and fairground boards are set in — which is
-   what a scrolling strip of short claims wants. It is already in the Google
-   Fonts request for the poster type, so this costs no extra download.
-
-   Condensed letterforms can take much wider tracking before they look loose,
-   and the extra spacing is what stops a heavy weight turning into a solid bar
-   at a glance. */
+/* Off Anton and onto the body face at its heaviest.
+   Anton is poster type — one weight, very condensed, drawn to be read across a
+   room. In a 40px band it reads as shouting, and its tight fit fights the wide
+   tracking a ticker needs to stay legible while it is moving. Karla at 700
+   with open tracking is quieter and easier to read in motion, which is the
+   only job this band has. */
 .marquee__track span {
-  font-family: var(--f-poster);
-  font-size: clamp(1.05rem, 2vw, 1.6rem);
-  font-weight: 400;                  /* Anton ships one weight; 700 fakes it */
+  font-family: var(--f-body);
+  font-size: clamp(.78rem, 1.05vw, .92rem);
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: .085em;
-  /* The band now carries a phone number. Proportional digits set at this
-     weight bunch and gap unevenly — a 1 takes a third the width of a 0 — which
-     makes a number look mistyped. Tabular figures give every digit the same
-     advance, so it reads as a number rather than as text that happens to be
-     numeric. */
+  letter-spacing: .19em;
+  /* The band carries a phone number. Proportional digits bunch and gap
+     unevenly — a 1 takes a third the width of a 0 — which makes a number look
+     mistyped. Tabular figures give every digit the same advance. */
   font-variant-numeric: tabular-nums;
-  padding-inline: 1.15rem;
-  display: inline-flex; align-items: center; gap: 1.15rem;
+  padding-inline: 1.3rem;
+  display: inline-flex; align-items: center; gap: 1.3rem;
   white-space: nowrap;
 }
+
+/* The number is a WhatsApp link, and has to look pressable without turning the
+   band into a row of underlines. Inherits the band's own colour; the rule
+   under it fills in on hover and on keyboard focus. */
+.marquee__track a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 2px solid rgb(16 12 8 / .3);
+  padding-bottom: .12em;
+  transition: border-color .25s;
+}
+.marquee__track a:hover,
+.marquee__track a:focus-visible { border-bottom-color: currentColor; }
+.marquee--red .marquee__track a { border-bottom-color: rgb(255 255 255 / .4); }
+
 .marquee__track span::after {
-  content: "✦"; font-size: .58em; opacity: .65; font-family: var(--f-body);
-  /* Anton sits high in its box; without this the star rides above the caps
-     rather than centring on them. */
-  transform: translateY(-.04em);
+  content: "✦"; font-size: .72em; opacity: .55; font-family: var(--f-body);
 }
 @keyframes slide { to { transform: translateX(-50%); } }
 
@@ -2045,19 +2051,20 @@ html { -webkit-tap-highlight-color: rgba(255, 198, 60, .18); }
     "sig  face";
   align-content: start;
   gap: .65rem clamp(1rem, 2.4vw, 1.7rem);
-  margin: 1.6rem 0 0;
-  padding: var(--pad-card);
-  border-radius: var(--r-m);
-  background: rgb(16 12 8 / .05);
-  border: 1px solid rgb(16 12 8 / .10);
-  /* So the portrait can run to the edges without escaping the rounded corner. */
-  overflow: hidden;
+  margin: 2.2rem 0 0;
+  padding: var(--pad-card) 0 0;
+  /* No tinted box and no rounded border.
+     A slightly-grey rounded rectangle with a hairline around it is the default
+     card every framework ships, and putting a person inside one is what made
+     this look generic. The block is held together by a single rule above it and
+     by the portrait's own edge — the same way a profile is set in print. */
+  background: none;
+  border: 0;
+  border-top: 1px solid rgb(16 12 8 / .16);
+  border-radius: 0;
   max-width: 100%;
 }
-.section:not(.on-cream) .ownercard {
-  background: rgb(244 232 213 / .04);
-  border-color: var(--line);
-}
+.section:not(.on-cream) .ownercard { border-top-color: var(--line); }
 .ownercard__body { display: contents; }
 
 .ownercard__name {
@@ -2114,7 +2121,8 @@ html { -webkit-tap-highlight-color: rgba(255, 198, 60, .18); }
   object-fit: cover;
   object-position: 50% 20%;
   align-self: stretch;
-  margin: calc(var(--pad-card) * -1) calc(var(--pad-card) * -1) calc(var(--pad-card) * -1) 0;
+  margin: 0;
+  border-radius: 2px;
   /* No greyscale. The reference used it, but that is the reference's photograph
      and its palette, not this one — and it is a real person's portrait, which
      is not a texture to be tuned to match a page. Left exactly as uploaded. */
@@ -2472,9 +2480,14 @@ html {
 /* Mark and name together, always. */
 .brandstrip__item {
   flex: none;
+  /* Mark above, name below. Side by side, ten of these made one long ribbon of
+     alternating discs and words with no unit to it; stacked, each brand is a
+     single object and the row reads as a set. */
   display: inline-flex;
+  flex-direction: column;
   align-items: center;
-  gap: .7rem;
+  text-align: center;
+  gap: .55rem;
   /* Held back only slightly. The old .55 with grayscale(1) is the standard
      treatment and assumes every logo is a dark full-colour mark; against a
      light background it finished the job of making a pale one invisible. */
@@ -2492,7 +2505,7 @@ html {
    pale logo dropped straight onto the page disappears — which it did. Giving it
    ground to sit on is what makes any logo work here. */
 .brandstrip__logo {
-  width: clamp(30px, 2.8vw, 38px);
+  width: clamp(40px, 3.8vw, 54px);
   aspect-ratio: 1;
   border-radius: 50%;
   flex: none;
@@ -2512,7 +2525,7 @@ html {
 /* Stands in until a real logo is uploaded, so every row has a mark from the
    first day instead of looking unfinished until the logos arrive. */
 .brandstrip__mono {
-  width: clamp(30px, 2.8vw, 38px);
+  width: clamp(40px, 3.8vw, 54px);
   aspect-ratio: 1;
   border-radius: 50%;
   flex: none;
@@ -2526,11 +2539,15 @@ html {
   box-shadow: 0 2px 8px rgb(16 12 8 / .22);
 }
 
+/* Off the display serif. Rozha One is the page's headline face, and ten of
+   them under the section's own heading competed with it. A small tracked sans
+   reads as a label under a mark, which is what it is. */
 .brandstrip__item b {
-  font-family: var(--f-display);
-  font-weight: 400;
-  font-size: clamp(1.05rem, 1.5vw, 1.35rem);
-  letter-spacing: .01em;
+  font-family: var(--f-body);
+  font-weight: 700;
+  font-size: clamp(.66rem, .8vw, .76rem);
+  letter-spacing: .13em;
+  text-transform: uppercase;
   white-space: nowrap;
   color: var(--ink);
 }

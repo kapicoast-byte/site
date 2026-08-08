@@ -96,7 +96,10 @@ export default async function CakesPage() {
 
         {/* Same wording as the home band where they overlap, so the two do not
             state the same promise two different ways. */}
-        <Marquee items={["Eggless at no extra charge", "Delivered along OMR", "48 hours' notice"]} />
+        <Marquee
+          items={["Eggless at no extra charge", "Delivered along OMR", s.phone]}
+          whatsapp={s.whatsapp}
+        />
 
         {packages.length > 0 && (
           <section className="section" id="packages">
