@@ -2753,3 +2753,77 @@ html {
 @media (prefers-reduced-motion: reduce) {
   .about__gallery figure:hover img { transform: none; }
 }
+
+/* ==========================================================================
+   Journal and Visit
+   ========================================================================== */
+
+/* Both sections were a centred column inside a wide dark field, so most of the
+   screen was empty brown either side of them. A wider measure for the two
+   sections whose content is grids rather than prose — the reading measure that
+   --maxw protects matters for paragraphs, not for a row of cards. */
+.wrap--wide { max-width: min(1560px, 94vw); }
+
+/* ---- journal ------------------------------------------------------------ */
+
+/* The newest post leads. Three identical cards say these are three equal
+   things, which is never true of a journal — the first one is the reason
+   somebody looks. */
+.jgrid {
+  display: grid;
+  gap: clamp(1rem, 1.8vw, 1.6rem);
+  grid-template-columns: 1fr;
+}
+@media (min-width: 900px) {
+  .jgrid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  /* The lead runs across two columns and turns on its side, picture beside the
+     text instead of above it. */
+  .jgrid > :first-child { grid-column: span 2; flex-direction: row; }
+  .jgrid > :first-child .card__media { width: 45%; flex: none; aspect-ratio: auto; }
+  .jgrid > :first-child .card__body { padding: clamp(1.3rem, 2.2vw, 2rem); }
+  .jgrid > :first-child h3 { font-size: clamp(1.5rem, 2.2vw, 2.1rem); }
+}
+
+/* Paper. Was three inline style attributes repeated on every card — the same
+   two colours written out again for each one, which is how a card ends up
+   styled differently from its neighbour by accident. */
+.card--paper {
+  background: var(--milk);
+  border-color: rgb(16 12 8 / .14);
+}
+.card--paper h3 { color: var(--ink); }
+.card--paper .pmeta { color: #7A6851; }
+.card--paper .pmeta .cat { color: var(--kumkum); }
+.card--paper .mitem__cta { color: var(--kumkum); margin: 0; }
+.card--paper .card__excerpt {
+  font-size: var(--fs-sm);
+  color: #5A4A38;
+  flex: 1;
+  text-wrap: pretty;
+}
+
+/* ---- visit -------------------------------------------------------------- */
+
+.visit__aside { display: grid; gap: 1rem; align-content: start; }
+
+.infocard__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .6rem;
+  margin-top: .5rem;
+}
+/* The phone sits between the two, as a button rather than as text, because on
+   a phone it is the most likely thing to be pressed on the whole page. */
+.infocard__actions .btn { font-size: var(--fs-micro); padding: .7em 1.2em; }
+.infocard__actions .tlink { margin-left: .2rem; }
+
+/* Today should be obvious at a glance — that is the only reason a list of
+   seven identical rows is on the page at all. A left edge in gold reads faster
+   than a tint across the whole row. */
+.hours div.is-today {
+  background: rgb(255 198 60 / .1);
+  color: var(--gold);
+  font-weight: 700;
+  box-shadow: inset 3px 0 0 var(--gold);
+}

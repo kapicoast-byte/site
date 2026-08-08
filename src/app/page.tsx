@@ -255,7 +255,7 @@ export default async function Home() {
         {/* -------------------------------------------------- journal ---- */}
         {posts.length > 0 && (
           <section className="section on-cream">
-            <div className="wrap">
+            <div className="wrap wrap--wide">
               <div className="head-row">
                 <div>
                   <p className="eyebrow">From the counter</p>
@@ -266,10 +266,9 @@ export default async function Home() {
               <div className="grid grid--3">
                 {posts.map((p) => (
                   <Link
-                    className="card"
+                    className="card card--paper"
                     key={p.id}
                     href={`/journal/${p.slug}`}
-                    style={{ background: "var(--milk)", borderColor: "rgba(16,12,8,.14)" }}
                   >
                     {p.imageUrl && (
                       <div className="card__media">
@@ -278,18 +277,14 @@ export default async function Home() {
                       </div>
                     )}
                     <div className="card__body">
-                      <div className="pmeta" style={{ color: "#7A6851" }}>
-                        <span className="cat" style={{ color: "var(--kumkum)" }}>{p.category}</span>
+                      <div className="pmeta">
+                        <span className="cat">{p.category}</span>
                         <span className="sep">·</span>
                         <span>{p.readMins} min read</span>
                       </div>
-                      <h3 style={{ color: "var(--ink)" }}>{p.title}</h3>
-                      <p style={{ fontSize: "var(--fs-sm)", color: "#5A4A38", flex: 1 }}>
-                        {p.excerpt}
-                      </p>
-                      <span className="mitem__cta" style={{ margin: 0, color: "var(--kumkum)" }}>
-                        Read →
-                      </span>
+                      <h3>{p.title}</h3>
+                      <p className="card__excerpt">{p.excerpt}</p>
+                      <span className="mitem__cta">Read →</span>
                     </div>
                   </Link>
                 ))}
@@ -300,7 +295,7 @@ export default async function Home() {
 
         {/* ---------------------------------------------------- visit ---- */}
         <section className="section">
-          <div className="wrap">
+          <div className="wrap wrap--wide">
             <div className="head-row">
               <div>
                 <p className="eyebrow">Come over</p>
@@ -309,13 +304,13 @@ export default async function Home() {
             </div>
             <div className="map-grid">
               <MapEmbed query={s.mapsQuery} />
-              <div style={{ display: "grid", gap: "1rem", alignContent: "start" }}>
+              <div className="visit__aside">
                 <div className="infocard">
                   <h3>{s.cafeName}</h3>
                   <address>
                     {s.addressL1}<br />{s.addressL2}<br />{s.addressL3}
                   </address>
-                  <p style={{ display: "flex", gap: ".6rem", flexWrap: "wrap", marginTop: ".4rem" }}>
+                  <div className="infocard__actions">
                     <a
                       className="btn"
                       target="_blank"
@@ -324,8 +319,13 @@ export default async function Home() {
                     >
                       Directions
                     </a>
-                    <Link className="btn btn--ghost" href="/visit">Hours &amp; contact</Link>
-                  </p>
+                    {s.phone && (
+                        <a className="btn btn--ghost" href={`tel:${s.phone.replace(/[^0-9+]/g, "")}`}>
+                          {s.phone}
+                        </a>
+                      )}
+                      <Link className="tlink" href="/visit">Hours &amp; contact →</Link>
+                    </div>
                 </div>
                 <div className="hours">
                   {hours.map((h, i) => (
