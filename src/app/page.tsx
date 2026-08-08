@@ -149,13 +149,15 @@ export default async function Home() {
               )}
             </div>
           </div>
-        </section>
 
-        {/* Between the two sections, spanning the full width — a divider, not a
-            third section. Inside the text column it began at the left margin
-            and ran off the right edge, which is why it read as lopsided.
-            Renders nothing until brands exist in Site settings. */}
-        <BrandStrip brands={s.brands} title="Brands we own" />
+          {/* Inside the cream section, not between sections. Sat outside, it
+              landed on the page's own dark background — which is what made its
+              type need to be light and left it looking like a separate band
+              wedged between two. Still full width, because it is a direct child
+              of the section rather than of the wrap.
+              Renders nothing until brands exist in Site settings. */}
+          <BrandStrip brands={s.brands} title="Brands we own" />
+        </section>
 
         {/* ------------------------------------------------- featured ---- */}
         {featured.length > 0 && (

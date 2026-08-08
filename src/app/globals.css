@@ -2035,7 +2035,10 @@ html { -webkit-tap-highlight-color: rgba(255, 198, 60, .18); }
   --pad-card: clamp(1.1rem, 2.2vw, 1.7rem);
 
   display: grid;
-  grid-template-columns: minmax(0, 1fr) clamp(118px, 30%, 196px);
+  /* The portrait gets a real share of the card, not a thumbnail column. At
+     196px it was a picture placed beside the text; at this width it is one of
+     the two things the block is made of. */
+  grid-template-columns: minmax(0, 1fr) clamp(148px, 40%, 300px);
   grid-template-areas:
     "name face"
     "note face"
@@ -2422,13 +2425,18 @@ html {
   padding-block: clamp(1.8rem, 3.4vw, 2.6rem);
   /* Transparent. It takes whatever the section above it is sitting on. */
   background: none;
-  /* This band sits between two sections and therefore on the page's own
-     background, which is dark — NOT on the cream of the section above it. The
-     first version coloured its type var(--ink) as though it were on cream, and
-     every brand name rendered dark on dark: invisible, with only the gold
-     monograms showing. */
-  border-block: 1px solid var(--line);
+  /* Sits inside the cream section now, so its type is dark again. It briefly
+     lived between sections, on the page's own dark background, which is why
+     these colours have been round the houses — the fix then was light type,
+     and the fix now is to put it somewhere that does not need it. */
+  border-block: 1px solid rgb(16 12 8 / .10);
+  /* Clears the story block above without inheriting the section's full rhythm,
+     which would leave it stranded halfway to the next section. */
+  margin-top: clamp(2rem, 4vw, 3.2rem);
 }
+/* Kept for any future placement on a dark section. */
+.brandstrip--on-dark { border-block-color: var(--line); }
+.brandstrip--on-dark .brandstrip__item b { color: var(--cream); }
 
 .brandstrip__label {
   text-align: center;
@@ -2436,7 +2444,7 @@ html {
   letter-spacing: .26em;
   text-transform: uppercase;
   font-weight: 700;
-  color: var(--gold);
+  color: var(--kumkum);
   margin-bottom: clamp(1rem, 2vw, 1.5rem);
 }
 
@@ -2524,7 +2532,7 @@ html {
   font-size: clamp(1.05rem, 1.5vw, 1.35rem);
   letter-spacing: .01em;
   white-space: nowrap;
-  color: var(--cream);
+  color: var(--ink);
 }
 
 @media (prefers-reduced-motion: reduce) {
