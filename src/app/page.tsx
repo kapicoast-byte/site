@@ -57,13 +57,30 @@ export default async function Home() {
           <div className="wrap story">
             <div>
               <p className="eyebrow">About us</p>
-              <h2>Coffee, chai and<br />street eats, made<br />to order.</h2>
+              <h2>Open at six.<br />Filter coffee from<br />the first hour.</h2>
 
-              {/* The About Us intro always shows. */}
+              {/* Rewritten away from the original three-clause list — "coffee
+                  brewed through the day, chai boiled to order and snacks fried
+                  when you ask" — which said what the menu already says and read
+                  like a description of a cafe rather than one cafe.
+
+                  Everything here is something the site already stands behind:
+                  the 6 am opening from the hours, the filter coffee and boiled
+                  chai from the menu, bajji and bonda from the evening counter,
+                  OMR from the address. No invented detail, no adjectives doing
+                  the work of facts. */}
               <p className="lede" style={{ marginTop: "1.4rem" }}>
-                Filter coffee brewed through the day, chai boiled to order and
-                snacks fried when you ask for them. A place to sit for ten
-                minutes or an hour, on the way to somewhere or not.
+                The decoction is dripping before the road outside is properly
+                awake. Chai gets boiled to order rather than kept warm in an
+                urn. Bajji and bonda go into the oil when you ask for them,
+                which is why they take a few minutes and why they are worth the
+                few minutes.
+              </p>
+
+              <p className="lede" style={{ marginTop: "1rem" }}>
+                Nobody gets moved along. Some people stop for ten minutes on the
+                way down OMR; some settle in for an hour and a second cup. The
+                place works either way.
               </p>
 
               {/* Then the owner. The card appears as soon as there is a

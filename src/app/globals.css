@@ -2498,18 +2498,31 @@ html {
    plus a centred label. In a column it is a continuation of the paragraph above
    it, so the rules come off, the label aligns left with the body text, and only
    a hairline above keeps it from touching the owner card. */
+/* A dark panel, not a bare strip on cream.
+   Both of this cafe's logos are pale marks drawn for the dark nav bar, and
+   most groups' logo sets are the same — a single colourway, usually the one
+   for a dark field. A strip that only works with dark logos would silently
+   swallow half of anything the owner uploads. Giving the strip its own dark
+   plate makes it a place logos can actually sit, and reads as a contained
+   object under the owner card rather than a loose row of images. */
 .brandstrip--inline {
   border-block: 0;
-  border-top: 1px solid rgb(16 12 8 / .10);
   margin-top: 1.8rem;
-  padding-block: 1.5rem 0;
+  padding: clamp(1.1rem, 2vw, 1.5rem) 0 clamp(1.2rem, 2.2vw, 1.6rem);
+  background: linear-gradient(160deg, var(--ink-2), var(--ink));
+  border: 1px solid rgb(255 255 255 / .07);
+  border-radius: var(--r-m);
+  box-shadow: var(--elev-1), var(--lit-edge);
 }
-.section:not(.on-cream) .brandstrip--inline { border-top-color: var(--line); }
 
 .brandstrip--inline .brandstrip__label {
   text-align: left;
-  margin-bottom: 1.1rem;
+  padding-inline: clamp(1.1rem, 2vw, 1.5rem);
+  margin-bottom: 1rem;
+  color: var(--gold);
 }
+/* Light type on the plate, whatever the section around it is doing. */
+.brandstrip--inline .brandstrip__item b { color: var(--cream); }
 
 /* Shorter here: the column is a fraction of the page width, and logos scaled
    for a full-bleed band would crowd it. */
