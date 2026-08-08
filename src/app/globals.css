@@ -2038,17 +2038,49 @@ html { -webkit-tap-highlight-color: rgba(255, 198, 60, .18); }
   border-radius: var(--r-m);
   background: rgb(16 12 8 / .045);
   border: 1px solid rgb(16 12 8 / .10);
-  /* A quote is what earns the full column. Without one the card shrinks to the
-     portrait and its caption, so there is no void to explain. */
-  width: fit-content;
   max-width: 100%;
 }
-/* With a note, the words lead and the picture supports them — so it spans the
-   column again and the portrait aligns to the first line rather than floating
-   against the middle of a paragraph. */
+/* Shrink-to-fit ONLY with no quote in it. Applied unconditionally, fit-content
+   resolves toward max-content — the quote's full unwrapped length — and the
+   card grows past the column and off the screen. */
+.ownercard:not(:has(.ownernote)) {
+  width: fit-content;
+}
+/* With a quote, the quote leads and the person signs underneath it — the way a
+   pull quote is set in print, rather than a portrait with text beside it.
+   `display: contents` on the body dissolves its box so the blockquote and the
+   caption become grid items of the card itself and can be placed
+   independently, without changing the markup. */
 .ownercard:has(.ownernote) {
   width: auto;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas:
+    "quote quote"
+    "face  sig";
+  gap: clamp(.8rem, 1.8vw, 1.2rem) clamp(.9rem, 2vw, 1.3rem);
+  align-items: center;
+  padding: clamp(1rem, 2vw, 1.5rem);
+}
+.ownercard:has(.ownernote) .ownercard__body { display: contents; }
+.ownercard:has(.ownernote) .ownernote { grid-area: quote; }
+.ownercard:has(.ownernote) .ownercard__face { grid-area: face; align-self: center; }
+.ownercard:has(.ownernote) .ownersig { grid-area: sig; }
+
+/* The quote is the largest thing in the block, because it is the point of it. */
+.ownercard:has(.ownernote) .ownernote {
+  font-size: clamp(1.15rem, 1.9vw, 1.6rem);
+  line-height: 1.42;
+}
+/* A real opening mark, hung outside the text so the first line still aligns
+   with everything below it. */
+.ownercard:has(.ownernote) .ownernote::before {
+  content: "C";
+  color: var(--gold);
+  font-size: 1.9em;
+  line-height: 0;
+  vertical-align: -.32em;
+  margin-right: .06em;
 }
 /* The story block sits on cream; the same card on a dark section needs the
    contrast flipped rather than assumed. */
@@ -2419,9 +2451,13 @@ html {
   padding-block: clamp(1.8rem, 3.4vw, 2.6rem);
   /* Transparent. It takes whatever the section above it is sitting on. */
   background: none;
-  border-block: 1px solid rgb(16 12 8 / .09);
+  /* This band sits between two sections and therefore on the page's own
+     background, which is dark — NOT on the cream of the section above it. The
+     first version coloured its type var(--ink) as though it were on cream, and
+     every brand name rendered dark on dark: invisible, with only the gold
+     monograms showing. */
+  border-block: 1px solid var(--line);
 }
-.brandstrip--on-dark { border-block-color: var(--line); }
 
 .brandstrip__label {
   text-align: center;
@@ -2429,7 +2465,7 @@ html {
   letter-spacing: .26em;
   text-transform: uppercase;
   font-weight: 700;
-  color: var(--kumkum);
+  color: var(--gold);
   margin-bottom: clamp(1rem, 2vw, 1.5rem);
 }
 
@@ -2482,8 +2518,8 @@ html {
   border-radius: 50%;
   flex: none;
   display: grid; place-items: center;
-  background: var(--ink);
-  box-shadow: 0 2px 8px rgb(16 12 8 / .22);
+  background: var(--ink-3);
+  border: 1px solid rgb(255 255 255 / .12);
   overflow: hidden;
 }
 .brandstrip__logo img {
@@ -2517,9 +2553,8 @@ html {
   font-size: clamp(1.05rem, 1.5vw, 1.35rem);
   letter-spacing: .01em;
   white-space: nowrap;
-  color: var(--ink);
+  color: var(--cream);
 }
-.brandstrip--on-dark .brandstrip__item b { color: var(--cream); }
 
 @media (prefers-reduced-motion: reduce) {
   /* Still readable, just not moving: a centred row that wraps. */
