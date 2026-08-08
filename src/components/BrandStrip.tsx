@@ -3,34 +3,35 @@ import type { BrandRow } from "@/lib/models";
 /**
  * The other businesses in the group, scrolling past.
  *
- * No JavaScript. The movement is a CSS animation on a track that holds the
- * list twice over and translates exactly -50%, which lands the copy precisely
- * where the original started — so the loop has no seam and needs nothing
- * measuring widths at runtime.
+ * Every entry is a mark AND a name, together. An earlier version showed one or
+ * the other — the logo if there was one, the name if there wasn't — which made
+ * a row of mismatched things and meant a logo nobody recognises arrived with
+ * nothing to identify it. A brand with no logo yet gets a monogram, so the row
+ * is consistent from the first day and gets better as real logos arrive rather
+ * than looking broken until they do.
  *
- * A brand with no logo yet shows its name set in type rather than a gap. That
- * is the normal state while logos are still being gathered, not an error, and
- * a row of mixed logos and wordmarks is what most groups' real strips look
- * like anyway.
+ * No JavaScript. The track holds the list twice over and translates exactly
+ * -50%, which lands the copy precisely where the original started — so the loop
+ * has no seam and nothing has to measure widths at runtime.
  *
- * Renders nothing at all when there are no brands, so the home page does not
- * carry an empty band while the list is being filled in.
+ * Renders nothing at all when there are no brands, so the page never carries an
+ * empty band while the list is being filled in.
  */
+
+/** Up to two initials, for the monogram shown until a real logo exists. */
+function initials(name: string): string {
+  const words = name.trim().split(/\s+/).filter(Boolean);
+  if (!words.length) return "•";
+  if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
+  return (words[0][0] + words[words.length - 1][0]).toUpperCase();
+}
+
 export default function BrandStrip({
   brands,
   title,
-  inline = false,
 }: {
   brands: BrandRow[];
   title: string;
-  /**
-   * Sits inside a text column rather than spanning the page.
-   *
-   * Changes more than width: a full-bleed band is a separate announcement and
-   * earns rules above and below plus a centred label, while in a column it is a
-   * continuation of the paragraph above it and should align with that text.
-   */
-  inline?: boolean;
 }) {
   // `?? []` is not belt-and-braces. Firestore omits absent fields, so any
   // settings document written before `brands` existed has no key for it.
@@ -38,23 +39,15 @@ export default function BrandStrip({
   if (!rows.length) return null;
 
   /* The track has to be at least twice the rail's width or translateX(-50%)
-     leaves a visible hole crossing the strip — with one or two brands the loop
-     is mostly empty space with a logo drifting through it. Repeating the list
-     until each half is long enough fills the rail regardless of how many
-     brands exist, and the halves stay identical so the loop is still seamless.
-
-     Both halves are the same length by construction: `half` is built first,
-     then duplicated. Deriving the second half separately is how these end up
-     one item apart and the loop develops a jump. */
-  const perHalf = Math.max(1, Math.ceil(5 / rows.length));
+     drags a visible hole across the strip. Repeating until each half fills the
+     rail covers a short list; the halves stay identical by construction —
+     `half` is built once and duplicated, never derived twice. */
+  const perHalf = Math.max(1, Math.ceil(6 / rows.length));
   const half = Array.from({ length: perHalf }, () => rows).flat();
   const track = [...half, ...half];
 
   return (
-    <section
-      className={`brandstrip${inline ? " brandstrip--inline" : ""}`}
-      aria-label={title}
-    >
+    <section className="brandstrip" aria-label={title}>
       <p className="brandstrip__label">{title}</p>
 
       <div className="brandstrip__rail">
@@ -63,20 +56,22 @@ export default function BrandStrip({
             <span
               className="brandstrip__item"
               key={i}
-              /* The second pass is the same content again. Announcing it would
-                 read every brand twice. */
+              /* Everything past the first pass is a repeat, present only to
+                 fill the rail. Announcing it would read every brand twice. */
               aria-hidden={i >= rows.length ? "true" : undefined}
-              /* Everything past the first pass is a repeat that exists only to
-                 fill the rail. With motion off there is no rail to fill, so
-                 these are hidden and each brand appears exactly once. */
               data-dup={i >= rows.length ? "" : undefined}
             >
               {b.logoUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={b.logoUrl} alt={b.name || ""} loading="lazy" />
+                <span className="brandstrip__logo">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={b.logoUrl} alt="" loading="lazy" />
+                </span>
               ) : (
-                <b>{b.name}</b>
+                <span className="brandstrip__mono" aria-hidden="true">
+                  {initials(b.name)}
+                </span>
               )}
+              <b>{b.name}</b>
             </span>
           ))}
         </div>

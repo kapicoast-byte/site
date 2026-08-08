@@ -121,15 +121,10 @@ export default async function Home() {
                 </figure>
               )}
 
-              {/* Directly under the owner, in the same column, rather than as
-                  a full-width band after the section — it reads as part of who
-                  this is, not as a separate announcement.
-
-                  The journal link that used to sit here is gone. The home page
+              {/* The journal link that used to sit here is gone. The home page
                   already carries a whole journal section further down with its
                   own "All posts" link, and the nav has a third. About Us is for
                   the company. */}
-              <BrandStrip brands={s.brands} title="Brands we own" inline />
             </div>
 
             <div className="story__stack">
@@ -149,6 +144,12 @@ export default async function Home() {
             </div>
           </div>
         </section>
+
+        {/* Between the two sections, spanning the full width — a divider, not a
+            third section. Inside the text column it began at the left margin
+            and ran off the right edge, which is why it read as lopsided.
+            Renders nothing until brands exist in Site settings. */}
+        <BrandStrip brands={s.brands} title="Brands we own" />
 
         {/* ------------------------------------------------- featured ---- */}
         {featured.length > 0 && (

@@ -2029,9 +2029,12 @@ html { -webkit-tap-highlight-color: rgba(255, 198, 60, .18); }
 .ownercard {
   display: flex;
   align-items: center;
-  gap: clamp(1rem, 2.2vw, 1.5rem);
-  margin: 1.8rem 0 0;
-  padding: clamp(.8rem, 1.6vw, 1.1rem);
+  gap: clamp(.9rem, 1.8vw, 1.25rem);
+  margin: 1.5rem 0 0;
+  /* Tightened. With a quote in it the card is the largest thing in the column,
+     and the previous padding plus a 148px portrait made it a box with a lot of
+     air and not much in it. */
+  padding: clamp(.7rem, 1.3vw, .95rem);
   border-radius: var(--r-m);
   background: rgb(16 12 8 / .045);
   border: 1px solid rgb(16 12 8 / .10);
@@ -2067,12 +2070,14 @@ html { -webkit-tap-highlight-color: rgba(255, 198, 60, .18); }
    presentational `height`. Without this they would pin the box to the attribute
    height and the real proportions would never apply. */
 .ownercard__face {
-  width: clamp(104px, 13vw, 148px);
+  /* Smaller than it was. The portrait supports the quote; at 148px it was
+     competing with it, and the card had to grow to hold both. */
+  width: clamp(82px, 9.5vw, 116px);
   height: auto;
   flex: none;
   /* Only bites on an unusually tall photograph. `contain` means that case
      letterboxes rather than stretching a face. */
-  max-height: 260px;
+  max-height: 190px;
   object-fit: contain;
   /* A photographic print, not a badge.
      A 2px gold rule straight against the image edge read as a sticker, and it
@@ -2105,9 +2110,10 @@ html { -webkit-tap-highlight-color: rgba(255, 198, 60, .18); }
 .ownernote {
   margin: 0;
   font-family: var(--f-display);
-  font-size: clamp(1.05rem, 1.7vw, 1.45rem);
-  line-height: 1.45;
+  font-size: clamp(1rem, 1.45vw, 1.24rem);
+  line-height: 1.5;
   color: var(--ink);
+  text-wrap: pretty;
 }
 .ownernote::before { content: "\201C"; }
 .ownernote::after  { content: "\201D"; }
@@ -2401,16 +2407,21 @@ html {
 
 /* ==========================================================================
    Brand strip — the other businesses in the group
+
+   A full-bleed band between the About Us section and the one below it, on the
+   page's own background rather than a panel of its own. The panel version this
+   replaces was a dark box that started at the text margin and ran off the right
+   edge — lopsided, and a container where none was wanted. A strip that divides
+   two sections should look like a strip, not like a third section.
    ========================================================================== */
 
 .brandstrip {
-  padding-block: clamp(2.2rem, 4vw, 3.2rem);
-  /* Hairlines top and bottom rather than a filled band, so it separates the
-     two sections it sits between without becoming a third one. */
-  border-block: 1px solid rgb(16 12 8 / .10);
+  padding-block: clamp(1.8rem, 3.4vw, 2.6rem);
+  /* Transparent. It takes whatever the section above it is sitting on. */
+  background: none;
+  border-block: 1px solid rgb(16 12 8 / .09);
 }
-.section:not(.on-cream) + .brandstrip,
-.brandstrip.on-dark { border-block-color: var(--line); }
+.brandstrip--on-dark { border-block-color: var(--line); }
 
 .brandstrip__label {
   text-align: center;
@@ -2419,127 +2430,169 @@ html {
   text-transform: uppercase;
   font-weight: 700;
   color: var(--kumkum);
-  margin-bottom: clamp(1.2rem, 2.4vw, 1.8rem);
+  margin-bottom: clamp(1rem, 2vw, 1.5rem);
 }
 
-/* The rail masks the ends so brands fade out instead of being guillotined at
-   the edge of the viewport. */
+/* Full viewport width, so the fades land on the screen edges and the strip is
+   symmetrical. Sitting inside the content column is what made it start at one
+   margin and finish in the middle of nothing. */
 .brandstrip__rail {
   overflow: hidden;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 12%, #000 88%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 12%, #000 88%, transparent 100%);
 }
 
 .brandstrip__track {
   display: flex;
   align-items: center;
-  gap: clamp(2.5rem, 6vw, 5rem);
+  gap: clamp(2.2rem, 5vw, 4rem);
   width: max-content;
   /* -50% is exactly one copy of the list, so the second lands where the first
      began and the loop has no seam. */
-  animation: brandslide 38s linear infinite;
+  animation: brandslide 42s linear infinite;
 }
 .brandstrip:hover .brandstrip__track { animation-play-state: paused; }
 @keyframes brandslide { to { transform: translateX(-50%); } }
 
+/* Mark and name together, always. */
 .brandstrip__item {
   flex: none;
   display: inline-flex;
   align-items: center;
-  /* Held back a little so the strip reads as a quiet credit line rather than
-     competing with the page's own brand — but only a little.
-
-     This was opacity .55 with grayscale(1), which is the standard treatment
-     and assumes every logo is a dark full-colour mark. Against the cream
-     section it made a pale logo disappear entirely. Muting a logo until it
-     cannot be seen is not restraint, it is a broken image. */
-  opacity: .82;
+  gap: .7rem;
+  /* Held back only slightly. The old .55 with grayscale(1) is the standard
+     treatment and assumes every logo is a dark full-colour mark; against a
+     light background it finished the job of making a pale one invisible. */
+  opacity: .8;
   transition: opacity .4s var(--ease-out-expo);
 }
 .brandstrip__item:hover { opacity: 1; }
 
-.brandstrip__item img {
-  /* Height, never width. Logos arrive at wildly different aspect ratios, and
-     sizing by width makes a wide wordmark tiny next to a square mark. Matching
-     their heights is what makes a mixed row look set rather than collected. */
-  height: clamp(26px, 3.4vw, 42px);
-  width: auto;
-  max-width: 190px;
+/* Every entry is a disc and a name — a real logo sits in the disc, a monogram
+   stands in until there is one. Same size, same shape, so a list that is half
+   logos and half placeholders still reads as one row.
+
+   The disc is dark for a practical reason: this cafe's marks, and most brands'
+   single-colourway sets, are drawn for a dark field. On the cream section a
+   pale logo dropped straight onto the page disappears — which it did. Giving it
+   ground to sit on is what makes any logo work here. */
+.brandstrip__logo {
+  width: clamp(30px, 2.8vw, 38px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  flex: none;
+  display: grid; place-items: center;
+  background: var(--ink);
+  box-shadow: 0 2px 8px rgb(16 12 8 / .22);
+  overflow: hidden;
+}
+.brandstrip__logo img {
+  /* Contained, not cropped: a logo trimmed by its frame is worse than a small
+     logo. */
+  width: 74%; height: 74%;
   object-fit: contain;
   display: block;
 }
 
-/* The fallback while a logo is still to come. */
+/* Stands in until a real logo is uploaded, so every row has a mark from the
+   first day instead of looking unfinished until the logos arrive. */
+.brandstrip__mono {
+  width: clamp(30px, 2.8vw, 38px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  flex: none;
+  display: grid; place-items: center;
+  font-family: var(--f-body);
+  font-weight: 700;
+  font-size: clamp(.66rem, .8vw, .78rem);
+  letter-spacing: .04em;
+  color: var(--ink);
+  background: linear-gradient(150deg, #FFD97A, #D9930E);
+  box-shadow: 0 2px 8px rgb(16 12 8 / .22);
+}
+
 .brandstrip__item b {
   font-family: var(--f-display);
   font-weight: 400;
-  font-size: clamp(1.1rem, 2vw, 1.5rem);
+  font-size: clamp(1.05rem, 1.5vw, 1.35rem);
   letter-spacing: .01em;
   white-space: nowrap;
-  color: inherit;
+  color: var(--ink);
 }
+.brandstrip--on-dark .brandstrip__item b { color: var(--cream); }
 
 @media (prefers-reduced-motion: reduce) {
-  /* Still readable, just not moving: it becomes a centred row that wraps. */
+  /* Still readable, just not moving: a centred row that wraps. */
   .brandstrip__track {
     animation: none;
     width: auto;
     flex-wrap: wrap;
     justify-content: center;
-    row-gap: 1.4rem;
+    row-gap: 1.2rem;
   }
-  /* The repeats exist only to fill a moving rail. With no motion there is
-     nothing to fill, so each brand appears exactly once. */
+  /* The repeats exist only to fill a moving rail. */
   .brandstrip__item[data-dup] { display: none; }
 }
 
-/* Inside the About Us column rather than spanning the page.
-   A full-bleed band is a separate announcement and earns rules above and below
-   plus a centred label. In a column it is a continuation of the paragraph above
-   it, so the rules come off, the label aligns left with the body text, and only
-   a hairline above keeps it from touching the owner card. */
-/* A dark panel, not a bare strip on cream.
-   Both of this cafe's logos are pale marks drawn for the dark nav bar, and
-   most groups' logo sets are the same — a single colourway, usually the one
-   for a dark field. A strip that only works with dark logos would silently
-   swallow half of anything the owner uploads. Giving the strip its own dark
-   plate makes it a place logos can actually sit, and reads as a contained
-   object under the owner card rather than a loose row of images. */
-.brandstrip--inline {
-  border-block: 0;
-  margin-top: 1.8rem;
-  padding: clamp(1.1rem, 2vw, 1.5rem) 0 clamp(1.2rem, 2.2vw, 1.6rem);
-  background: linear-gradient(160deg, var(--ink-2), var(--ink));
-  border: 1px solid rgb(255 255 255 / .07);
-  border-radius: var(--r-m);
-  box-shadow: var(--elev-1), var(--lit-edge);
+/* ==========================================================================
+   Hero — entrance and finish
+   The layout is unchanged. What was missing is choreography: everything
+   arrived in the same frame, which is the difference between a page that has
+   loaded and a page that has been directed.
+   ========================================================================== */
+
+/* Each block rises a beat after the one above, so the eye is led down the
+   stack in the order it should read: hours, name, tagline, sentence, buttons,
+   the line under them.
+
+   A CSS animation with `both` fill, never script — the hero must not depend on
+   a bundle arriving, and `both` means the pre-animation state is only ever
+   applied by the same rule that removes it. Under prefers-reduced-motion the
+   global rule collapses the duration to 1ms and everything is simply there. */
+@keyframes heroRise {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: none; }
+}
+.vhero__inner > * {
+  animation: heroRise .9s var(--ease-out-expo) both;
+}
+/* 90ms apart. Close enough to read as one movement, far enough apart to have
+   an order — much more and it becomes a slideshow the reader has to wait for. */
+.vhero__inner > *:nth-child(1) { animation-delay: .05s; }
+.vhero__inner > *:nth-child(2) { animation-delay: .14s; }
+.vhero__inner > *:nth-child(3) { animation-delay: .23s; }
+.vhero__inner > *:nth-child(4) { animation-delay: .32s; }
+.vhero__inner > *:nth-child(5) { animation-delay: .41s; }
+.vhero__inner > *:nth-child(6) { animation-delay: .50s; }
+
+/* The furniture comes last and quietly — it is orientation, not content. */
+.vhero__side, .vhero__cue { animation: heroRise 1s var(--ease-out-expo) both; animation-delay: .8s; }
+
+/* ---- the primary button ------------------------------------------------- */
+
+/* The arrow gets its own disc, seated flush against the button's inner
+   padding. A naked glyph next to a word is the default; a nested one is the
+   detail that reads as considered — and it gives the hover something to move
+   that is not the whole button. */
+.vhero__row .btn:not(.btn--ghost) svg {
+  width: 1.62em; height: 1.62em;
+  padding: .4em;
+  border-radius: 50%;
+  background: rgb(16 12 8 / .13);
+  margin-right: -.42em;
+  transition: transform .45s var(--ease-out-expo), background .3s;
+}
+.vhero__row .btn:not(.btn--ghost):hover svg {
+  background: rgb(16 12 8 / .2);
+  transform: translateX(3px);
 }
 
-.brandstrip--inline .brandstrip__label {
-  text-align: left;
-  padding-inline: clamp(1.1rem, 2vw, 1.5rem);
-  margin-bottom: 1rem;
-  color: var(--gold);
-}
-/* Light type on the plate, whatever the section around it is doing. */
-.brandstrip--inline .brandstrip__item b { color: var(--cream); }
+/* ---- copy ---------------------------------------------------------------- */
 
-/* Shorter here: the column is a fraction of the page width, and logos scaled
-   for a full-bleed band would crowd it. */
-.brandstrip--inline .brandstrip__item img { height: clamp(22px, 2.4vw, 30px); max-width: 140px; }
-.brandstrip--inline .brandstrip__item b { font-size: clamp(1rem, 1.5vw, 1.2rem); }
-.brandstrip--inline .brandstrip__track { gap: clamp(1.8rem, 3.5vw, 3rem); }
+/* Stops the last line of the sentence from stranding a single word under a
+   headline this large, where the ragged edge is very visible. */
+.vhero__sub { text-wrap: pretty; }
 
-/* Fades at BOTH ends, so a logo dissolves as it reaches the edge and the next
-   one emerges out of nothing on the other side — the strip reads as continuous
-   rather than as a window with something sliding past behind it.
-
-   The first version of this rule faded only the right. Items therefore
-   appeared abruptly at the left edge, fully formed, which is the one thing
-   that gives away that it is a loop. The fade is shorter than the full-bleed
-   band's 8% because the rail here is a fraction of the page width, and the
-   same proportion would eat most of the visible strip. */
-.brandstrip--inline .brandstrip__rail {
-  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
-  mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
+@media (prefers-reduced-motion: reduce) {
+  .vhero__row .btn:not(.btn--ghost):hover svg { transform: none; }
 }
