@@ -2070,13 +2070,18 @@ html { -webkit-tap-highlight-color: rgba(255, 198, 60, .18); }
 .ownercard__name {
   grid-area: name;
   margin: 0;
-  font-family: var(--f-display);
-  font-weight: 400;
-  font-size: clamp(1.3rem, 2.5vw, 2.05rem);
-  line-height: 1.12;
-  /* Wide tracking is what makes a name read as a masthead rather than a label.
-     It only works at this size and only in caps. */
-  letter-spacing: .13em;
+  /* Off Rozha One. A high-contrast display serif set in wide-tracked caps is
+     the look of a title page in a word processor — thick and thin strokes
+     fighting the letterspacing, which is exactly why it read as a document
+     heading rather than as design.
+     A humanist sans at a light weight holds wide tracking cleanly, because
+     every stroke is the same weight and the spacing is the only thing doing the
+     work. */
+  font-family: var(--f-body);
+  font-weight: 500;
+  font-size: clamp(.95rem, 1.35vw, 1.16rem);
+  line-height: 1.35;
+  letter-spacing: .28em;
   text-transform: uppercase;
   color: var(--ink);
   text-wrap: balance;
@@ -2223,7 +2228,10 @@ html { -webkit-tap-highlight-color: rgba(255, 198, 60, .18); }
   box-shadow: var(--elev-2), var(--lit-edge), 0 40px 70px -34px rgb(0 0 0 / .6);
 }
 
-.ownercard, .story__img { box-shadow: var(--elev-1), var(--lit-edge); }
+/* .ownercard is deliberately absent. It is no longer a card — no tint, no
+   border, no radius — and an elevation shadow around an object with no edges
+   draws exactly the soft rectangle the box was removed to get rid of. */
+.story__img { box-shadow: var(--elev-1), var(--lit-edge); }
 /* No shadow on .ownercard__face any more. It was written when the portrait was
    a framed print floating on the card; it now runs to three of the card's
    edges, and a drop shadow on an image that bleeds is a shadow cast onto
@@ -2376,11 +2384,15 @@ body::after {
    Styled rather than hidden on purpose: `scrollbar-width: none` would take it
    away completely, and with it the only indication of how long a page is and
    how far down you are. This makes it belong instead of disappear. */
+/* Hidden, at the owner's instruction. Noted rather than argued: this removes
+   the only indication of how long a page is and how far down the reader has
+   got, which on /menu — 76 dishes — is a real loss. Scrolling itself is
+   untouched; wheel, trackpad, keyboard and touch all work exactly as before,
+   and the page is still fully keyboard-navigable. */
 html {
-  scrollbar-width: thin;
-  scrollbar-color: rgb(255 198 60 / .34) transparent;
+  scrollbar-width: none;
 }
-::-webkit-scrollbar { width: 11px; height: 11px; }
+::-webkit-scrollbar { width: 0; height: 0; display: none; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
   /* The border is the page's own colour, which insets the thumb and leaves it
