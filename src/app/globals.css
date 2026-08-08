@@ -2112,10 +2112,9 @@ html { -webkit-tap-highlight-color: rgba(255, 198, 60, .18); }
   object-position: 50% 20%;
   align-self: stretch;
   margin: calc(var(--pad-card) * -1) calc(var(--pad-card) * -1) calc(var(--pad-card) * -1) 0;
-  /* Greyscale, as in the reference — it stops one photograph's colour cast
-     fighting the page, and it flatters a picture taken in whatever light was
-     available rather than a studio. */
-  filter: grayscale(1) contrast(1.03);
+  /* No greyscale. The reference used it, but that is the reference's photograph
+     and its palette, not this one — and it is a real person's portrait, which
+     is not a texture to be tuned to match a page. Left exactly as uploaded. */
   /* Everything the framed version set, undone: no mat, no border, no radius. */
   padding: 0;
   background: none;
