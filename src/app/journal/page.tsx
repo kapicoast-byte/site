@@ -96,7 +96,7 @@ export default async function JournalPage() {
                       <p style={{ fontSize: "var(--fs-sm)", color: "var(--cream-dim)", flex: 1 }}>
                         {p.excerpt}
                       </p>
-                      <span className="mitem__cta" style={{ margin: 0 }}>Read →</span>
+                      <span className="mitem__cta">Read →</span>
                     </div>
                   </Link>
                 ))}

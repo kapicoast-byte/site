@@ -2827,3 +2827,49 @@ html {
   font-weight: 700;
   box-shadow: inset 3px 0 0 var(--gold);
 }
+
+/* ---- utilities the page was writing inline ------------------------------ */
+
+/* These were style={{ }} attributes repeated across sections. Each is a real
+   decision — a measure, a rhythm, an alignment — and a decision written into
+   markup is one that gets made differently the next time. The single inline
+   style left on the page is the dish accent, which is correct there: it passes
+   a per-row value from the database, not a rule. */
+
+/* The short supporting line beside a section heading. */
+.lede--short { max-width: 34ch; }
+
+/* A lede that follows a heading rather than opening a column. */
+.lede--spaced { margin-top: 1.4rem; }
+
+/* The "see everything" link under a grid. */
+.grid__after { margin-top: clamp(1.8rem, 3.4vw, 2.5rem); }
+
+/* A row of buttons under body copy. */
+.btnrow {
+  margin-top: clamp(1.4rem, 2.6vw, 2rem);
+  display: flex;
+  gap: .7rem;
+  flex-wrap: wrap;
+}
+
+/* A two-column split whose halves are centred against each other rather than
+   top-aligned — used where an image sits beside copy of a different height. */
+.grid--middle { align-items: center; }
+
+/* Dish cards use the same body-copy treatment as journal cards; only the
+   colour differs, and that comes from the surface they sit on. */
+.card__excerpt {
+  font-size: var(--fs-sm);
+  color: var(--cream-dim);
+  flex: 1;
+  text-wrap: pretty;
+}
+.card--paper .card__excerpt { color: #5A4A38; }
+
+/* Scoped to cards. Unscoped, this overrides the `margin-left: auto` in the
+   base rule, which is what pushes the CTA to the right-hand end of a menu row
+   in MenuBrowser — the global version silently pulled every recipe link back
+   against its price. In a card the CTA is the last item in a column and wants
+   no margin at all. */
+.card .mitem__cta { margin: 0; }

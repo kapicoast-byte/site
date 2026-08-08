@@ -62,7 +62,7 @@ export default async function Home() {
                   <p className="eyebrow">What people order</p>
                   <h2>What we&apos;re<br />known for.</h2>
                 </div>
-                <p className="lede" style={{ maxWidth: "34ch" }}>
+                <p className="lede lede--short">
                   Every dish on our menu comes with the actual recipe. Tap any
                   item to read it.
                 </p>
@@ -88,10 +88,10 @@ export default async function Home() {
                     </div>
                     <div className="card__body">
                       <h3>{m.name}</h3>
-                      <p style={{ fontSize: "var(--fs-sm)", color: "var(--cream-dim)", flex: 1 }}>
+                      <p className="card__excerpt">
                         {m.blurb}
                       </p>
-                      <span className="mitem__cta" style={{ margin: 0 }}>
+                      <span className="mitem__cta">
                         Read the recipe →
                       </span>
                     </div>
@@ -99,7 +99,7 @@ export default async function Home() {
                 ))}
               </div>
 
-              <p style={{ marginTop: "2.5rem" }}>
+              <p className="grid__after">
                 <Link className="btn btn--ghost" href="/menu">
                   Full menu &amp; every recipe →
                 </Link>
@@ -137,15 +137,15 @@ export default async function Home() {
 
         {/* ---------------------------------------------------- cakes ---- */}
         <section className="section">
-          <div className="wrap grid grid--2" style={{ alignItems: "center" }}>
+          <div className="wrap grid grid--2 grid--middle">
             <div>
               <p className="eyebrow">Parties &amp; events</p>
               <h2>We&apos;ll bake the<br />middle of your<br /><span className="gold">celebration.</span></h2>
-              <p className="lede" style={{ marginTop: "1.4rem" }}>
+              <p className="lede lede--spaced">
                 Built to your size, your flavour and your Chennai weather. Plus
                 high tea, chaat counters and office drops anywhere along OMR.
               </p>
-              <p style={{ marginTop: "2rem", display: "flex", gap: ".7rem", flexWrap: "wrap" }}>
+              <p className="btnrow">
                 <Link className="btn btn--red" href="/cakes#builder">Build your cake</Link>
                 <Link className="btn btn--ghost" href="/cakes#packages">Event packages</Link>
               </p>
