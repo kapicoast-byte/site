@@ -53,110 +53,100 @@ export default async function Home() {
         {/* The number in the band is the thing you press, not a number to retype. */}
         <Marquee items={s.marquee} whatsapp={s.whatsapp} />
 
-        {/* ---------------------------------------------------- story ---- */}
-        <section className="section on-cream">
-          <div className="wrap story">
+        {/* ---------------------------------------------------- about ---- */}
+        {/* Built as a spread rather than a block: heading and copy set against
+            each other at the top, the photography full-bleed across the page,
+            then the owner at the same scale as everything else. Boxed into one
+            half of a two-column grid, this read as a widget on a page; the
+            width is what makes it a page. */}
+        <section className="section on-cream about">
+          <div className="wrap about__head">
             <div>
               <p className="eyebrow">About us</p>
-              <h2>Open at six.<br />Filter coffee from<br />the first hour.</h2>
+              <h2 className="about__title">
+                Open at six.<br />Filter coffee from<br />the first hour.
+              </h2>
+            </div>
 
-              {/* Rewritten away from the original three-clause list — "coffee
-                  brewed through the day, chai boiled to order and snacks fried
-                  when you ask" — which said what the menu already says and read
-                  like a description of a cafe rather than one cafe.
-
-                  Everything here is something the site already stands behind:
-                  the 6 am opening from the hours, the filter coffee and boiled
-                  chai from the menu, bajji and bonda from the evening counter,
-                  OMR from the address. No invented detail, no adjectives doing
-                  the work of facts. */}
-              <p className="lede" style={{ marginTop: "1.4rem" }}>
+            {/* Everything here is something the site already stands behind: the
+                6 am opening from the hours, filter coffee and boiled chai from
+                the menu, bajji and bonda from the evening counter, OMR from the
+                address. No invented detail. */}
+            <div className="about__copy">
+              <p>
                 The decoction is dripping before the road outside is properly
                 awake. Chai gets boiled to order rather than kept warm in an
                 urn. Bajji and bonda go into the oil when you ask for them,
                 which is why they take a few minutes and why they are worth the
                 few minutes.
               </p>
-
-              <p className="lede" style={{ marginTop: "1rem" }}>
+              <p>
                 Nobody gets moved along. Some people stop for ten minutes on the
                 way down OMR; some settle in for an hour and a second cup. The
                 place works either way.
               </p>
-
-              {/* Then the owner. The card appears as soon as there is a
-                  picture, so the section is never a blank space — but the quote
-                  and the name only appear once they have actually been written.
-                  Nothing is published under a real person's name unless that
-                  person typed it. Both are set in Admin -> Site settings. */}
-              {/* Name first and large, the note beneath it as body copy, the
-                  role last, and the portrait alongside — the order a profile
-                  is actually read in. The name used to sit under the note in a
-                  caption, which made the whole block a photo with a paragraph
-                  next to it rather than an introduction to a person. */}
-              {(s.ownerNote || s.ownerPhotoUrl) && (
-                <figure className="ownercard">
-                  <div className="ownercard__body">
-                    {s.ownerName && <p className="ownercard__name">{s.ownerName}</p>}
-                    {/* Guarded: an empty blockquote would still paint its
-                        pseudo-element quote marks as a bare “” . */}
-                    {s.ownerNote && (
-                      <blockquote className="ownernote">{s.ownerNote}</blockquote>
-                    )}
-                    <figcaption className="ownersig">
-                      <small>{s.ownerRole}</small>
-                    </figcaption>
-                  </div>
-
-                  {s.ownerPhotoUrl ? (
-                    // width/height are 4:5, matching the CSS frame — they
-                    // reserve the right shape before the stylesheet or the file
-                    // has loaded, so the page does not jolt when the portrait
-                    // arrives.
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      className="ownercard__face"
-                      src={s.ownerPhotoUrl}
-                      alt={s.ownerName ? `${s.ownerName}, ${s.ownerRole}` : s.ownerRole}
-                      width={264}
-                      height={330}
-                      loading="lazy"
-                    />
-                  ) : (
-                    <span className="ownercard__face ownercard__face--blank" aria-hidden="true" />
-                  )}
-                </figure>
-              )}
-
-              {/* The journal link that used to sit here is gone. The home page
-                  already carries a whole journal section further down with its
-                  own "All posts" link, and the nav has a third. About Us is for
-                  the company. */}
-            </div>
-
-            <div className="story__stack">
-              <span className="story__badge">{s.heroBadge}</span>
-              {s.storyImage1Url && (
-                <div className="story__img">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={s.storyImage1Url} alt="Inside the cafe" loading="lazy" />
-                </div>
-              )}
-              {s.storyImage2Url && (
-                <div className="story__img story__img--float">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={s.storyImage2Url} alt="The counter" loading="lazy" />
-                </div>
-              )}
             </div>
           </div>
 
-          {/* Inside the cream section, not between sections. Sat outside, it
-              landed on the page's own dark background — which is what made its
-              type need to be light and left it looking like a separate band
-              wedged between two. Still full width, because it is a direct child
-              of the section rather than of the wrap.
-              Renders nothing until brands exist in Site settings. */}
+          {/* Edge to edge. The two pictures were a boxed image and a small one
+              tucked over its corner — a decoration beside the text. At full
+              width they are the room itself. */}
+          {(s.storyImage1Url || s.storyImage2Url) && (
+            <div className="about__gallery">
+              {s.storyImage1Url && (
+                <figure>
+                  <span className="about__badge">{s.heroBadge}</span>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={s.storyImage1Url} alt="Inside the cafe" loading="lazy" />
+                </figure>
+              )}
+              {s.storyImage2Url && (
+                <figure>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={s.storyImage2Url} alt="The counter" loading="lazy" />
+                </figure>
+              )}
+            </div>
+          )}
+
+          {/* The owner, at the page's scale rather than tucked under a column.
+              The name and role show as soon as there is a picture; the note only
+              once it has been written. Both are set in Admin -> Site settings. */}
+          {(s.ownerNote || s.ownerPhotoUrl) && (
+            <div className="wrap">
+              <figure className="ownercard">
+                <div className="ownercard__body">
+                  {s.ownerName && <p className="ownercard__name">{s.ownerName}</p>}
+                  {/* Guarded: an empty blockquote would still paint its
+                      pseudo-element quote marks as a bare “” . */}
+                  {s.ownerNote && (
+                    <blockquote className="ownernote">{s.ownerNote}</blockquote>
+                  )}
+                  <figcaption className="ownersig">
+                    <small>{s.ownerRole}</small>
+                  </figcaption>
+                </div>
+
+                {s.ownerPhotoUrl ? (
+                  // width/height are 4:5, reserving the right shape before the
+                  // stylesheet or the file has loaded so the page does not jolt.
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    className="ownercard__face"
+                    src={s.ownerPhotoUrl}
+                    alt={s.ownerName ? `${s.ownerName}, ${s.ownerRole}` : s.ownerRole}
+                    width={264}
+                    height={330}
+                    loading="lazy"
+                  />
+                ) : (
+                  <span className="ownercard__face ownercard__face--blank" aria-hidden="true" />
+                )}
+              </figure>
+            </div>
+          )}
+
+          {/* Renders nothing until brands exist in Site settings. */}
           <BrandStrip brands={s.brands} title="Brands we own" />
         </section>
 
