@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import ScrollReveal from "@/components/ScrollReveal";
+import CardSpotlight from "@/components/CardSpotlight";
 
 export const metadata: Metadata = {
   title: "Kapi Coast — காபி கோஸ்ட் · Filter kapi, kadak chai & street eats on OMR, Chennai",
@@ -43,6 +44,9 @@ export default function RootLayout({
             in as they are scrolled to, so no page had to be edited to opt in
             and nothing has to be remembered when one is added. */}
         <ScrollReveal />
+        {/* Also renders nothing. One delegated listener lights whichever card
+            the pointer is over. */}
+        <CardSpotlight />
       </body>
     </html>
   );

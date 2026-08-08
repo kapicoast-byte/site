@@ -810,13 +810,45 @@ body.menu-open .burger span:nth-child(3) { transform: translateY(-6px) rotate(-4
 }
 
 /* Recipe poster header — generated, no stock photography */
+/* A dish with no photograph yet.
+   The diagonal hatch this replaces was the giveaway — a repeating 45-degree
+   stripe is what a placeholder looks like, and four of them in a row read as
+   four things still to be done rather than four dishes.
+
+   Three offset radial pools instead, in the dish's own accent. Because they are
+   at different positions and sizes they never resolve into a pattern, which is
+   what makes it read as a surface with light on it rather than as fill. */
 .poster {
   display: grid; place-items: center;
+  position: relative;
+  overflow: hidden;
   background:
-    repeating-linear-gradient(135deg, rgba(255,252,246,.045) 0 11px, transparent 11px 22px),
-    radial-gradient(130% 110% at 26% 18%, var(--a, #6B4226) 0%, rgba(20,14,9,.92) 76%),
-    var(--ink-3);
+    radial-gradient(88% 72% at 18% 12%,
+      color-mix(in oklab, var(--a, #6B4226) 78%, white 22%) 0%,
+      transparent 62%),
+    radial-gradient(72% 68% at 82% 30%,
+      color-mix(in oklab, var(--a, #6B4226) 62%, black 38%) 0%,
+      transparent 66%),
+    radial-gradient(120% 110% at 50% 108%, rgb(12 8 5 / .92) 0%, transparent 70%),
+    color-mix(in oklab, var(--a, #6B4226) 46%, #140E09 54%);
 }
+
+/* The light that follows the pointer, from CardSpotlight. --spot is set only
+   while a card is hovered, so this costs nothing at rest and there is no
+   transition running on a hundred cards nobody is touching. */
+.card .poster::after,
+.pkg::after {
+  content: "";
+  position: absolute; inset: 0;
+  pointer-events: none;
+  opacity: calc(var(--spot, 0) * 1);
+  transition: opacity .45s var(--ease-out-expo);
+  background: radial-gradient(
+    38% 46% at var(--mx, 50%) var(--my, 50%),
+    rgb(255 245 225 / .17),
+    transparent 70%);
+}
+.pkg { position: relative; overflow: hidden; }
 .poster__ta {
   font-family: var(--f-tamil); font-weight: 700;
   font-size: clamp(2.6rem, 11vw, 4.6rem); line-height: 1;
