@@ -198,9 +198,11 @@ export default function MenuBrowser({
                 {d.tamil && <span className="mitem__ta tamil">{d.tamil}</span>}
                 <span className="mitem__desc">{d.blurb}</span>
                 <span className="mitem__foot">
-                  {d.tags.map((t) => (
-                    <span key={t} className={`pill pill--${t}`}>{TAG_LABEL[t] ?? t}</span>
-                  ))}
+                  <span className="mitem__tags">
+                    {d.tags.map((t) => (
+                      <span key={t} className={`pill pill--${t}`}>{TAG_LABEL[t] ?? t}</span>
+                    ))}
+                  </span>
                   <span className="mitem__cta">Recipe →</span>
                 </span>
               </button>

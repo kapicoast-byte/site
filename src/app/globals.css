@@ -447,6 +447,18 @@ body.menu-open .burger span:nth-child(3) { transform: translateY(-6px) rotate(-4
 
 .vhero__row { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; }
 
+/* Narrow screens: the eyebrow's three segments cannot share a line, and the
+   round separators were stranding at the end of wrapped lines with nothing
+   after them. Drop the separators, tighten the tracking to buy back a line,
+   and give the two CTAs one shared width instead of letting each size to its
+   own label. */
+@media (max-width: 560px) {
+  .vhero__eyebrow { gap: .4rem 1.5rem; letter-spacing: .14em; font-size: .66rem; }
+  .vhero__eyebrow .dot { display: none; }
+  .vhero__row { display: grid; gap: .6rem; width: 100%; max-width: 22rem; }
+  .vhero__row .btn { width: 100%; }
+}
+
 .vhero__trust {
   display: flex; flex-wrap: wrap; align-items: center; gap: .7rem;
   margin-top: clamp(.95rem, 2.2vh, 1.5rem);
@@ -579,10 +591,17 @@ body.menu-open .burger span:nth-child(3) { transform: translateY(-6px) rotate(-4
    place — dead rules get read as live ones. Recoverable from git if the
    boxed two-column version is ever wanted back. */
 
-.facts { display: grid; gap: 1px; background: var(--line); margin-top: 2.4rem; border-radius: var(--r-m); overflow: hidden; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
-.on-cream .facts { background: rgba(16,12,8,.16); }
-.fact { background: var(--ink); padding: 1.2rem 1.1rem; }
-.on-cream .fact { background: var(--cream); }
+/* Hairlines are drawn by each cell onto its own top/left edge, not by painting
+   the container and letting a 1px gap show through. With the old technique a
+   part-filled last row left the container colour exposed as a large solid
+   block. The first row's and first column's lines fall outside the padding box
+   and are clipped by overflow:hidden, so the perimeter stays open as before.
+   Fixed 2x2 rather than auto-fit: there are exactly four facts and the column
+   they sit in is ~560px, which auto-fit resolved to three-plus-one. */
+.facts { display: grid; gap: 1px; background: var(--ink); margin-top: 2.4rem; border-radius: var(--r-m); overflow: hidden; grid-template-columns: repeat(2, 1fr); }
+.on-cream .facts { background: var(--cream); }
+.fact { background: var(--ink); padding: 1.2rem 1.1rem; box-shadow: -1px -1px 0 0 var(--line); }
+.on-cream .fact { background: var(--cream); box-shadow: -1px -1px 0 0 rgba(16,12,8,.16); }
 .fact b { display: block; font-family: var(--f-display); font-size: 1.9rem; line-height: 1; color: var(--gold); }
 .on-cream .fact b { color: var(--kumkum); }
 .fact span { font-size: var(--fs-caps); letter-spacing: .18em; text-transform: uppercase; color: var(--cream-dim); }
@@ -592,7 +611,10 @@ body.menu-open .burger span:nth-child(3) { transform: translateY(-6px) rotate(-4
 .grid { display: grid; gap: clamp(1rem, 2vw, 1.6rem); }
 .grid--3 { grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); }
 .grid--4 { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
-.grid--2 { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+/* Two columns, not "at least 320px wide". auto-fit resolved to three tracks in
+   a 1240px wrap, so a four-item block rendered 3+1. */
+.grid--2 { grid-template-columns: 1fr; }
+@media (min-width: 720px) { .grid--2 { grid-template-columns: repeat(2, 1fr); } }
 
 .card {
   background: var(--ink-2);
@@ -705,9 +727,10 @@ body.menu-open .burger span:nth-child(3) { transform: translateY(-6px) rotate(-4
 .search {
   display: flex; align-items: center; gap: .55rem;
   border: 1px solid var(--line); border-radius: 100px;
-  padding: .45em .95em; min-width: 200px;
+  /* 200px cut "Search dishes, ingredients…" mid-word. */
+  padding: .45em .95em; min-width: 17.5rem; min-height: 44px;
 }
-.search input { background: none; border: 0; outline: 0; width: 100%; font-size: var(--fs-sm); }
+.search input { background: none; border: 0; outline: 0; width: 100%; font-size: var(--fs-sm); min-height: 34px; }
 /* The input drops its own outline, so the ring has to be put back on the pill
    around it — otherwise tabbing to the search lands on something that gives no
    sign it has focus. Every other field on the site already does this; this one
@@ -719,10 +742,13 @@ body.menu-open .burger span:nth-child(3) { transform: translateY(-6px) rotate(-4
 .search input::placeholder { color: var(--cream-dim); }
 .search svg { width: 15px; height: 15px; opacity: .6; flex: none; }
 
-.mgrid { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--r-m); overflow: hidden; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+/* Same per-cell hairline as .facts — 28 dishes over 3 columns leaves the last
+   row two-thirds empty, which used to render as a solid light slab. */
+.mgrid { display: grid; gap: 1px; background: var(--ink); border: 1px solid var(--line); border-radius: var(--r-m); overflow: hidden; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
 
 .mitem {
   background: var(--ink); position: relative;
+  box-shadow: -1px -1px 0 0 var(--line);
   padding: 1.5rem 1.4rem;
   text-align: left; width: 100%;
   display: grid; gap: .45rem;
@@ -745,7 +771,11 @@ body.menu-open .burger span:nth-child(3) { transform: translateY(-6px) rotate(-4
 .mitem__price { font-weight: 700; color: var(--gold); white-space: nowrap; font-size: 1rem; }
 .mitem__ta { font-family: var(--f-tamil); font-size: var(--fs-sm); color: var(--kumkum-lit); }
 .mitem__desc { font-size: var(--fs-sm); color: var(--cream-dim); }
-.mitem__foot { display: flex; align-items: center; gap: .6rem; margin-top: .35rem; flex-wrap: wrap; }
+/* Tags wrap inside their own box so "Recipe →" keeps one position on every
+   card. Previously the tags and the CTA were siblings in one wrapping flex
+   row, so a third tag pushed the call to action onto a line of its own. */
+.mitem__foot { display: flex; align-items: flex-end; gap: .9rem; margin-top: .35rem; flex-wrap: nowrap; }
+.mitem__tags { display: flex; flex-wrap: wrap; align-items: center; gap: .45rem; flex: 1 1 auto; min-width: 0; }
 .pill {
   font-size: var(--fs-micro); letter-spacing: .14em; text-transform: uppercase; font-weight: 700;
   padding: .3em .65em; border-radius: 100px;
@@ -755,7 +785,8 @@ body.menu-open .burger span:nth-child(3) { transform: translateY(-6px) rotate(-4
 .pill--hot { color: var(--kumkum-lit); border-color: rgba(232,89,63,.4); }
 .pill--star { color: var(--gold); border-color: rgba(255,198,60,.45); }
 .mitem__cta {
-  margin-left: auto; font-size: var(--fs-caps); font-weight: 700;
+  margin-left: auto; flex: none; white-space: nowrap;
+  font-size: var(--fs-caps); font-weight: 700;
   letter-spacing: .14em; text-transform: uppercase; color: var(--gold);
   display: inline-flex; align-items: center; gap: .4em;
   transition: gap .3s;
@@ -1009,7 +1040,10 @@ body.menu-open .burger span:nth-child(3) { transform: translateY(-6px) rotate(-4
 }
 .fieldset > h4 { margin-bottom: 1rem; margin-left: 0; padding: 0; }
 
-.opts { display: grid; gap: .6rem; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); margin-top: 1rem; }
+/* grid-auto-rows keeps every option the same height. Without it each row sizes
+   to its own tallest label, so a row holding "Office / Corporate" stood 75px
+   while the row under it sat at 51px. */
+.opts { display: grid; gap: .6rem; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); grid-auto-rows: 1fr; margin-top: 1rem; }
 .opt { position: relative; }
 .opt input { position: absolute; opacity: 0; width: 0; height: 0; }
 .opt span {
@@ -1188,7 +1222,14 @@ body.menu-open .burger span:nth-child(3) { transform: translateY(-6px) rotate(-4
 .hours span:first-child { color: var(--cream-dim); }
 .hours div.is-today span:first-child { color: var(--gold); }
 
-.strip { display: flex; gap: .7rem; overflow-x: auto; padding-bottom: .8rem; scroll-snap-type: x mandatory; scrollbar-width: thin; }
+/* Eight photos over ~1500px in a 1136px rail, so the last one is always cut.
+   Fade the cut so it reads as "continues" rather than as a broken image; the
+   scrollbar stays as the primary cue. */
+.strip {
+  display: flex; gap: .7rem; overflow-x: auto; padding-bottom: .8rem;
+  scroll-snap-type: x mandatory; scrollbar-width: thin;
+  mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 3.5rem), transparent 100%);
+}
 .strip img {
   height: clamp(190px, 26vw, 300px); width: auto; flex: none;
   border-radius: var(--r-m); border: 1px solid var(--line);
@@ -1224,6 +1265,13 @@ body.menu-open .burger span:nth-child(3) { transform: translateY(-6px) rotate(-4
   transition: color .3s, transform .3s var(--ease);
 }
 .foot ul a:hover { color: var(--gold); transform: translateX(.3rem); }
+/* Touch: 33px tall failed WCAG 2.5.5, the same rule .btn already follows. Only
+   on coarse pointers, so the footer stays compact for mouse users. */
+@media (pointer: coarse) {
+  .foot ul { gap: .2rem; }
+  .foot ul a { display: inline-flex; align-items: center; min-height: 44px; padding-block: 0; }
+  .infocard a:not(.btn) { display: inline-flex; align-items: center; min-height: 44px; }
+}
 .foot__bottom {
   margin-top: 3rem; padding-top: 1.4rem; border-top: 1px solid var(--line);
   display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between;
@@ -2365,6 +2413,14 @@ body::after {
   transition: color .3s var(--ease-out-expo);
 }
 .foot__phone:hover { color: var(--gold); }
+/* Touch: the number is the most-tapped thing in the footer and was 23px tall,
+   under the 44px in WCAG 2.5.5. Same for the legal pair, which sit as
+   standalone links rather than inline in a sentence, so no inline exemption. */
+@media (pointer: coarse) {
+  .foot__phone { display: inline-flex; align-items: center; min-height: 44px; }
+  .foot__legal { gap: .4rem 1.2rem; }
+  .foot__legal a { display: inline-flex; align-items: center; min-height: 44px; }
+}
 
 .foot__mail {
   display: block;
