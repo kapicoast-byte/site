@@ -236,7 +236,10 @@ export default function MenuBrowser({
         <div className="drawer__scroll">
           {open && (
             <>
-              <div className="drawer__hero poster" style={{ ["--a" as string]: open.accent }}>
+              <div
+                className={`drawer__hero${open.imageUrl ? " drawer__hero--shot" : " poster"}`}
+                style={{ ["--a" as string]: open.accent }}
+              >
                 {open.imageUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={open.imageUrl} alt={open.name} />
