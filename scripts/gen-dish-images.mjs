@@ -33,6 +33,7 @@ const args = process.argv.slice(2);
 const GO = args.includes("--go");
 const RELOGO = args.includes("--relogo");
 const FORCE = args.includes("--force");   // regenerate even if the file exists
+const NO_LOGO = args.includes("--no-logo");
 const arg = (n) => args.find((a) => a.startsWith(`--${n}=`))?.split("=")[1];
 const ONLY = arg("only")?.split(",").map((s) => s.trim()).filter(Boolean);
 const LIMIT = Number(arg("limit") || 0);
@@ -115,6 +116,27 @@ const OVERRIDES = {
   "Filter Coffee":
     "South Indian degree filter coffee — deep tan, strong decoction and hot " +
     "milk pulled tall so it carries a thick creamy froth on top, steam rising",
+
+  /* These are Rs 50 tea cakes sold by the piece, so the shot is a single slice
+     photographed from the side with the layers showing. A whole round cake
+     reads as something you order for a birthday, not something you buy with a
+     coffee. */
+  ...Object.fromEntries(
+    [
+      ["Vanilla Cake", "soft vanilla sponge, white cream between the layers, a light dusting of icing sugar on top"],
+      ["Chocolate Cake", "moist dark chocolate sponge, chocolate cream between the layers, a chocolate curl on top"],
+      ["Black Forest Cake", "dark chocolate sponge, whipped white cream between the layers, glossy dark cherries and chocolate shavings on top"],
+      ["Strawberry Cake", "pale sponge, whipped white cream between the layers, fresh halved strawberries on top"],
+      ["Pista Cake", "pale green pistachio sponge, cream between the layers, chopped pistachios scattered on top"],
+      ["Blueberry Cake", "pale sponge, whipped white cream between the layers, fresh blueberries on top"],
+    ].map(([name, detail]) => [
+      name,
+      "a single tall triangular slice of layered " + detail +
+        ", cut clean and standing on its base, photographed from the side at " +
+        "eye level so the sponge and cream layers are clearly visible, a " +
+        "little fresh fruit and a small mint sprig beside it",
+    ])
+  ),
 };
 
 function promptFor(d) {
@@ -129,6 +151,11 @@ function promptFor(d) {
  * white background and stays identical on all 76.
  */
 async function brand(buffer) {
+  /* At the size the menu actually renders these — a ~72px thumbnail — the
+     wordmark is an illegible dark smudge sitting over the food. The badge only
+     ever read at full size, which is not where anyone sees it. */
+  if (NO_LOGO) return buffer;
+
   const img = sharp(buffer);
   const { width = 1024, height = 1024 } = await img.metadata();
 
@@ -226,7 +253,7 @@ if (RELOGO) {
   const files = (await readdir(RAW_DIR)).filter((f) => f.endsWith(".png"));
   for (const f of files) {
     await writeFile(path.join(OUT_DIR, f), await brand(await readFile(path.join(RAW_DIR, f))));
-    console.log("  re-branded", f);
+    console.log(NO_LOGO ? "  logo removed " + f : "  re-branded " + f);
   }
   console.log(`\n${files.length} re-branded from cache. No API calls, no cost.`);
   process.exit(0);
