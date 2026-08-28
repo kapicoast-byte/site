@@ -2971,6 +2971,25 @@ html {
 
 /* The corridor is full-bleed and carries its own vertical rhythm, so the
    section wrapper must not add its usual side padding on top of it. */
-.section--flush { padding-inline: 0; }
+/* .section adds clamp(4.5rem,10vw,9rem) top and bottom, which left a dark band
+   between the marquee and the corridor. The corridor is full-bleed and carries
+   its own rhythm through .stream__over, so it wants none of it — it should meet
+   the yellow band edge to edge. */
+.section--flush { padding: 0; }
 .stream--dishes { min-height: clamp(420px, 46vw, 660px); display: grid; align-items: center; }
 .stream__over { padding-block: clamp(2rem, 5vw, 4rem); }
+
+/* The dish name rides inside the card, so it scales with the corridor: a hint
+   far back, readable as the card fills the frame. Inside the card and not
+   over it, because a fixed-size label would be enormous on the near cards and
+   invisible on the far ones. */
+.stream__label {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  padding: 1.15cqw 1cqw .95cqw;
+  font-family: var(--f-body); font-weight: 700;
+  font-size: 1.15cqw; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--cream); text-align: center;
+  background: linear-gradient(transparent, rgba(16,12,8,.62) 42%, rgba(16,12,8,.9));
+  text-shadow: 0 1px 6px rgba(0,0,0,.8);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}

@@ -86,6 +86,7 @@ export default async function Home() {
               cards={12}
               speed={22}
               axis={52}
+              labels
             >
               <span className="stream__veil" aria-hidden />
               <div className="wrap stream__over">

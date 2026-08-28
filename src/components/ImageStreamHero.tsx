@@ -130,6 +130,12 @@ export type ImageStreamHeroProps = {
   speed?: number;
   /** Vertical placement of the corridor's axis, as a percentage of height. @default 55 */
   axis?: number;
+  /**
+   * Print each image's `alt` across the bottom of its card. The label is inside
+   * the card, so it rides the same perspective — unreadable at the vanishing
+   * point and legible as the card fills the frame. @default false
+   */
+  labels?: boolean;
   /** Override any part of the corridor geometry. Merged over the defaults. */
   path?: CorridorPath;
   /** Content rendered above the corridor. */
@@ -142,6 +148,7 @@ export function ImageStreamHero({
   cards = 9,
   speed = 18,
   axis = 55,
+  labels = false,
   path,
   children,
   className,
@@ -231,6 +238,9 @@ export function ImageStreamHero({
                       decoding="async"
                       draggable={false}
                     />
+                  ) : null}
+                  {labels && img?.alt ? (
+                    <span className="stream__label">{img.alt}</span>
                   ) : null}
                 </div>
               );
