@@ -23,3 +23,10 @@ serviceAccount*.json
 # Agent skills installed locally (npx skills add). Reference material for
 # editors, not part of the site — it has no business in the image or the repo.
 .agents/
+
+# Generated dish photography and its cached originals — 180 MB, and the
+# images live in Firebase Storage once attached. Regenerate with
+# scripts/gen-dish-images.mjs; the manifest records every prompt.
+public/dishes/
+# Receipt for scripts/attach-dish-images.mjs --rollback. Local, not shared.
+scripts/.attach-receipt.json
