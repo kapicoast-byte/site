@@ -1428,7 +1428,9 @@ html { -webkit-tap-highlight-color: rgba(255, 198, 60, .18); }
   position: relative;
   display: grid;
   place-items: center;
-  min-height: 460px;
+  /* Height comes from the sizer plus room for the hint. A flat 460px against a
+     278px sizer left ~180px of dead space between the cake and the caption. */
+  padding-bottom: 2.4rem;
   touch-action: pan-y;          /* let the page scroll; we only claim the drag */
   cursor: grab;
   max-width: 100%;
@@ -1479,7 +1481,22 @@ html { -webkit-tap-highlight-color: rgba(255, 198, 60, .18); }
   position: absolute;
   top: 0; left: calc(var(--w) / -2);
   width: var(--w); height: var(--h);
-  background: linear-gradient(180deg, var(--ice-lit) 0%, var(--ice) 42%, var(--ice-dark) 100%);
+  /* Three things in one paint, cheaper than three stacked elements at 90
+     panels: a narrow specular band near the top where the light catches the
+     buttercream, the icing body, and the sponge showing at the base. A single
+     flat fill was what made this read as a plastic toy rather than a cake. */
+  background:
+    linear-gradient(
+      180deg,
+      var(--ice-lit) 0%,
+      var(--ice-lit) 8%,
+      var(--ice) 26%,
+      var(--ice) 58%,
+      var(--ice-dark) 72%,
+      var(--sponge, #C89B62) 78%,
+      var(--sponge, #C89B62) 92%,
+      color-mix(in oklab, var(--sponge, #C89B62) 72%, #2A1A0C) 100%
+    );
   transform: rotateY(var(--a)) translateZ(var(--r));
   /* Baked shading: panels facing away sit in shadow. Painted with an inset
      shadow rather than a filter — a filter on 90 elements would spawn 90
@@ -1508,12 +1525,27 @@ html { -webkit-tap-highlight-color: rgba(255, 198, 60, .18); }
   transform: rotateX(90deg);
 }
 
-/* Bottom tier — vanilla buttercream, chocolate drip. */
-.cake3d__tier--t1 { --ice: #EFDFC6; --ice-lit: #FBF3E4; --ice-dark: #C9B492; --drip-c: #4A2C18; }
-/* Middle — kumkum red, cream drip. */
-.cake3d__tier--t2 { --ice: #AE3521; --ice-lit: #D2523A; --ice-dark: #78200F; --drip-c: #F6EADA; }
-/* Top — gold, chocolate drip. */
-.cake3d__tier--t3 { --ice: #E9A81F; --ice-lit: #FFC63C; --ice-dark: #A5710B; --drip-c: #4A2C18; }
+/* The palette is the brand's, but pulled back towards food. The old version
+   ran a fully saturated kumkum tier against a fully saturated gold one, which
+   reads as poster paint; here the red is a dark ganache and the gold is a thin
+   caramel drizzle over buttercream, so the brand colours are still doing the
+   work without the cake looking moulded from plastic. */
+
+/* Bottom — vanilla buttercream over vanilla sponge, dark chocolate drip. */
+.cake3d__tier--t1 {
+  --ice: #EADBC0; --ice-lit: #FAF1E1; --ice-dark: #BFA987;
+  --sponge: #D7B27C; --drip-c: #3E2412;
+}
+/* Middle — chocolate ganache over cocoa sponge, buttercream drip. */
+.cake3d__tier--t2 {
+  --ice: #6B3A24; --ice-lit: #98583A; --ice-dark: #3F1E10;
+  --sponge: #7A4B2C; --drip-c: #F2E4D0;
+}
+/* Top — buttercream with a caramel drizzle, the gold kept as an accent. */
+.cake3d__tier--t3 {
+  --ice: #F0E2C8; --ice-lit: #FFF8EC; --ice-dark: #C8B08A;
+  --sponge: #DCBA88; --drip-c: #D9930E;
+}
 
 /* ---- board -------------------------------------------------------------- */
 
@@ -1581,12 +1613,14 @@ html { -webkit-tap-highlight-color: rgba(255, 198, 60, .18); }
 
 /* Sits in front of the geometry, not inside it, so the lit side stays put
    while the cake turns underneath. */
+/* Key light only. There used to be a linear dark wash across the same box,
+   which worked when the cake sat inside a bordered card but draws a visible
+   rectangle now that the section behind it is open and near-black — the
+   gradient's own edge became the artefact. A radial has no edge to show. */
 .cake3d__light {
   position: absolute; inset: -10% -4%;
   pointer-events: none;
-  background:
-    radial-gradient(46% 40% at 30% 22%, rgb(255 236 198 / .22), transparent 62%),
-    linear-gradient(118deg, transparent 46%, rgb(16 12 8 / .38) 100%);
+  background: radial-gradient(46% 40% at 30% 22%, rgb(255 236 198 / .22), transparent 62%);
 }
 .cake3d__floor {
   position: absolute;
@@ -3100,3 +3134,43 @@ html {
 @media (max-width: 560px) {
   .arch__stage { transform: scale(.5); }
 }
+
+/* ---------- 24. Cake band ------------------------------------------------
+   The cake is the subject of this section, so it sits centred and large with
+   the copy beneath it, rather than being an illustration parked in the right
+   half of a two-column grid — a 460px object in a half-width track left the
+   other half empty and made the cake look like a spot drawing.
+   ------------------------------------------------------------------------ */
+.cakeband { position: relative; overflow: hidden; }
+
+/* A warm pool of light behind the cake so it reads as staged on a counter
+   rather than floating in the dark. Sits behind everything, and is wider than
+   it is tall so it grounds the cake instead of haloing it. */
+.cakeband::before {
+  content: ""; position: absolute; z-index: 0;
+  left: 50%; top: 44%; transform: translate(-50%, -50%);
+  width: min(1100px, 120%); aspect-ratio: 2 / 1;
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    rgba(217,147,14,.16) 0%,
+    rgba(174,53,33,.10) 34%,
+    transparent 68%
+  );
+  pointer-events: none;
+}
+
+.cakeband__inner { position: relative; z-index: 1; display: grid; justify-items: center; }
+
+.cakeband__copy {
+  display: grid; justify-items: center; text-align: center;
+  gap: 1.1rem;
+  /* rem, not ch. `ch` resolves against this container's own 16px font, so 46ch
+     was about 370px — and the h2 inside it is nearly four times that size, so
+     the heading had no room and broke into four lines. The measure that
+     matters is the heading's, set on the heading. */
+  max-width: 46rem;
+  margin-top: clamp(.5rem, 2vw, 1.5rem);
+}
+.cakeband__copy h2 { max-width: 22ch; }
+.cakeband__copy .lede { max-width: 46ch; }
+.cakeband__copy .btnrow { display: flex; gap: .7rem; flex-wrap: wrap; justify-content: center; }
