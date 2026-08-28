@@ -1,0 +1,19 @@
+rules_version = '2';
+
+/*
+ * Uploaded files are served through /api/uploads/<name>, which streams them
+ * from the bucket using the Admin service account. Nothing should reach the
+ * bucket directly, so client access is denied outright.
+ *
+ * Before this file existed the bucket was listable and every object was
+ * fetchable without credentials, which contradicted the comment in
+ * src/lib/uploads.ts describing it as private. The app route was a convention;
+ * this makes it a boundary.
+ */
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -30,3 +30,7 @@ serviceAccount*.json
 public/dishes/
 # Receipt for scripts/attach-dish-images.mjs --rollback. Local, not shared.
 scripts/.attach-receipt.json
+
+# Firebase CLI local state
+.firebase/
+firebase-debug*.log

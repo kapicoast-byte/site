@@ -1,0 +1,24 @@
+rules_version = '2';
+
+/*
+ * Every read and write in this app goes through the Next.js server, which
+ * authenticates with the Firebase Admin service account. Admin credentials
+ * bypass these rules entirely, so denying all client access costs the site
+ * nothing and closes the database to everyone else.
+ *
+ * Before this file existed the database was world-readable: menuItems,
+ * settings, media, posts and categories all answered an unauthenticated REST
+ * request with 200. What was exposed happened to be content the site already
+ * publishes, but every query in src/lib/db.ts filters `published: true`, which
+ * means drafts are meant to be private — and the raw API ignores that filter.
+ *
+ * If a browser ever needs to read Firestore directly, add a rule for that one
+ * collection. Do not widen this default.
+ */
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
