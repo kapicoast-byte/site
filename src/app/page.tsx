@@ -6,7 +6,7 @@ import Footer from "@/components/Footer";
 import Marquee from "@/components/Marquee";
 import VideoHero from "@/components/VideoHero";
 import MapEmbed from "@/components/MapEmbed";
-import CakeShowpiece from "@/components/CakeShowpiece";
+import ArchGallery from "@/components/ArchGallery";
 import BrandStrip from "@/components/BrandStrip";
 import ImageStreamHero from "@/components/ImageStreamHero";
 
@@ -35,6 +35,18 @@ export default async function Home() {
   /* A dish with no photo would ride the rails as an empty card, so the
      corridor only ever sees the ones that have an image. */
   const withPhotos = dishes.filter((m) => m.imageUrl);
+
+  /* The cake section used to show a CSS-drawn cake. There are real photographs
+     of the tea cakes now, so it shows those instead — sorted by name so the
+     fan is stable between renders rather than reshuffling on every request. */
+  const cakeDeck = withPhotos
+    .filter((m) => /cake/i.test(m.name) && !/coffee|karupatti/i.test(m.name))
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .map((m) => ({
+      src: m.imageUrl as string,
+      alt: `${m.name} at Kapi Coast`,
+      label: m.name.replace(/\s*Cake$/i, ""),
+    }));
 
   /* The corridor holds `cards` at a time and indexes them positionally, so
      handing it all 76 in menu order would only ever show the first few — which
@@ -149,7 +161,9 @@ export default async function Home() {
               </p>
             </div>
 
-            <CakeShowpiece />
+            {cakeDeck.length > 0 ? (
+              <ArchGallery items={cakeDeck} cardWidth={168} cardHeight={224} />
+            ) : null}
           </div>
         </section>
 

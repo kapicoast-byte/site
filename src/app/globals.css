@@ -3031,3 +3031,72 @@ html {
   text-shadow: 0 1px 6px rgba(0,0,0,.8);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
+
+/* ---------- 23. Arch gallery ---------------------------------------------
+   Structural rules for src/components/ArchGallery.tsx. The fan geometry is
+   computed per card and stays inline; only the flat parts live here.
+   ------------------------------------------------------------------------ */
+/* overflow:hidden is required, not cosmetic. The narrow-screen rules below
+   shrink the fan with transform:scale, and a transform changes what is painted
+   without changing the layout box — so the stage's full unscaled width still
+   pushed the page sideways (709px of scroll on a 390px viewport). Clipping
+   here contains it; the fan is symmetric and centred, so nothing meaningful is
+   lost at the edges. */
+.arch { display: flex; width: 100%; align-items: center; justify-content: center; padding-block: 2.5rem; overflow: hidden; }
+/* flex:none — the stage carries an explicit pixel width from the fan maths, and
+   as a shrinkable flex item it was collapsing to the container before the scale
+   was applied, halving the fan a second time. */
+.arch__stage { position: relative; flex: none; }
+
+.arch__card {
+  overflow: hidden;
+  cursor: pointer;
+  isolation: isolate;                 /* keep the multiply inside the card */
+  background: var(--cream);
+  border: 1px solid rgba(16,12,8,.18);
+  box-shadow: 0 18px 38px -14px rgba(0,0,0,.75), 0 2px 8px rgba(0,0,0,.35);
+  transition: transform .28s cubic-bezier(.22,1,.36,1), box-shadow .28s;
+}
+.arch__card.is-up { box-shadow: 0 28px 60px -18px rgba(0,0,0,.85), 0 4px 14px rgba(0,0,0,.4); }
+.arch__card:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+.arch__card img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  pointer-events: none; user-select: none;
+  mix-blend-mode: multiply;
+}
+@supports not (mix-blend-mode: multiply) {
+  .arch__card { background: var(--ink-3); }
+  .arch__card img { mix-blend-mode: normal; }
+}
+
+/* The name appears only on the raised card. The cards overlap by more than half
+   their width, so a permanently visible label is clipped by its neighbour and
+   reads as "BLACK F", "BLUEB", "CHOCO" — worse than no label. Raising a card
+   clears it of the others, which is exactly when the name can be read.
+   Focus counts as well as hover, so it is reachable by keyboard and by tap. */
+.arch__label {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 1;
+  padding: 1.4rem .6rem .6rem;
+  font-size: var(--fs-caps); font-weight: 700;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--cream); text-align: center;
+  background: linear-gradient(transparent, rgba(16,12,8,.55) 40%, rgba(16,12,8,.88));
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  opacity: 0; transform: translateY(.4rem);
+  transition: opacity .24s var(--ease), transform .24s var(--ease);
+}
+.arch__card.is-up .arch__label,
+.arch__card:focus-visible .arch__label { opacity: 1; transform: none; }
+
+/* Narrow screens: the fan is wider than the viewport, so shrink the cards
+   rather than let the stage push the page sideways. */
+@media (max-width: 900px) {
+  .arch { padding-block: 1.5rem; }
+  .arch__stage { transform: scale(.72); }
+}
+@media (max-width: 560px) {
+  .arch__stage { transform: scale(.5); }
+}
