@@ -2933,3 +2933,44 @@ html {
    against its price. In a card the CTA is the last item in a column and wants
    no margin at all. */
 .card .mitem__cta { margin: 0; }
+
+/* ---------- 22. Image stream corridor ------------------------------------
+   Structural rules for src/components/ImageStreamHero.tsx. The upstream
+   component carried these as Tailwind utilities; this project has no Tailwind,
+   so they live here. The corridor's geometry is all inline, generated from the
+   path — only the flat, non-computed parts belong in a stylesheet.
+   ------------------------------------------------------------------------ */
+.stream { position: relative; overflow: hidden; }
+.stream__stage { position: absolute; inset: 0; pointer-events: none; }
+.stream__space { position: absolute; inset: 0; transform-style: preserve-3d; }
+.stream__card { position: absolute; overflow: hidden; }
+.stream__card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* The dish photos are on white and the site is near-black, so without this the
+   corridor reads as a shoal of bright rectangles rather than one ribbon. The
+   vignette darkens the near cards as they fill the frame, and the ends fade
+   into the section instead of stopping at a hard edge. */
+.stream--dishes { background: var(--ink); }
+.stream--dishes .stream__card img { filter: saturate(.95) contrast(1.02); }
+.stream__veil {
+  position: absolute; inset: 0; pointer-events: none; z-index: 2;
+  background:
+    /* The cards are born at the axis and pass straight through the headline,
+       so the middle needs its own scrim or the type is unreadable for half of
+       every cycle. The radial sits over the throat where the cards are small
+       and dense, and falls off before the outer rails, which stay bright. */
+    radial-gradient(56% 54% at 50% 52%, rgba(16,12,8,.94) 0%, rgba(16,12,8,.86) 38%, rgba(16,12,8,.5) 62%, transparent 80%),
+    linear-gradient(90deg, var(--ink) 0%, transparent 18%, transparent 82%, var(--ink) 100%),
+    linear-gradient(180deg, var(--ink) 0%, transparent 22%, transparent 74%, var(--ink) 100%);
+}
+.stream__over {
+  position: relative; z-index: 3;
+  display: grid; justify-items: center; text-align: center;
+  gap: 1.1rem;
+}
+
+/* The corridor is full-bleed and carries its own vertical rhythm, so the
+   section wrapper must not add its usual side padding on top of it. */
+.section--flush { padding-inline: 0; }
+.stream--dishes { min-height: clamp(420px, 46vw, 660px); display: grid; align-items: center; }
+.stream__over { padding-block: clamp(2rem, 5vw, 4rem); }

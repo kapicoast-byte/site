@@ -8,6 +8,7 @@ import VideoHero from "@/components/VideoHero";
 import MapEmbed from "@/components/MapEmbed";
 import CakeShowpiece from "@/components/CakeShowpiece";
 import BrandStrip from "@/components/BrandStrip";
+import ImageStreamHero from "@/components/ImageStreamHero";
 
 export const dynamic = "force-dynamic";
 
@@ -16,11 +17,13 @@ const rupee = (n: number) => "₹" + n.toLocaleString("en-IN");
 export default async function Home() {
   const s = await getSettings();
 
-  const [featured, posts] = await Promise.all([
+  const [dishes, posts] = await Promise.all([
+    /* Every published dish, not the four starred ones: the corridor cycles
+       through whatever it is given, so the more photos there are the longer it
+       runs before a card repeats. */
     db.menuItem.findMany({
-      where: { published: true, tags: { has: "star" } },
+      where: { published: true },
       orderBy: { order: "asc" },
-      take: 4,
     }),
     db.post.findMany({
       where: { published: true },
@@ -28,6 +31,22 @@ export default async function Home() {
       take: 3,
     }),
   ]);
+
+  /* A dish with no photo would ride the rails as an empty card, so the
+     corridor only ever sees the ones that have an image. */
+  const withPhotos = dishes.filter((m) => m.imageUrl);
+
+  /* The corridor holds `cards` at a time and indexes them positionally, so
+     handing it all 76 in menu order would only ever show the first few — which
+     are the hot drinks, and the rails would run three near-identical glasses of
+     tea. Sampling at an even stride across the whole menu instead puts a
+     coffee, a juice, a bajji and a cake on the rails at once. */
+  const STREAM_CARDS = 12;
+  const stride = Math.max(1, Math.floor(withPhotos.length / STREAM_CARDS));
+  const streamImages = Array.from(
+    { length: Math.min(STREAM_CARDS, withPhotos.length) },
+    (_, i) => withPhotos[(i * stride) % withPhotos.length],
+  ).map((m) => ({ src: m.imageUrl as string, alt: m.name }));
 
   const hours = hoursOf(s);
   const today = new Date().getDay(); // 0 = Sunday
@@ -53,58 +72,36 @@ export default async function Home() {
         {/* The number in the band is the thing you press, not a number to retype. */}
         <Marquee items={s.marquee} whatsapp={s.whatsapp} />
 
-        {/* ------------------------------------------------- featured ---- */}
-        {featured.length > 0 && (
-          <section className="section">
-            <div className="wrap">
-              <div className="head-row">
-                <div>
-                  <p className="eyebrow">What people order</p>
-                  <h2>What we&apos;re<br />known for.</h2>
-                </div>
+        {/* ------------------------------------------------- the stream ----
+            Was a grid of four starred dishes. The corridor runs the whole
+            menu instead, so the section shows what the kitchen actually makes
+            rather than a sample of it. Decorative and aria-hidden inside the
+            component; the heading and the link carry the meaning, and the
+            menu itself is one press away. */}
+        {streamImages.length > 0 && (
+          <section className="section section--flush">
+            <ImageStreamHero
+              className="stream--dishes"
+              images={streamImages}
+              cards={12}
+              speed={22}
+              axis={52}
+            >
+              <span className="stream__veil" aria-hidden />
+              <div className="wrap stream__over">
+                <p className="eyebrow">What people order</p>
+                <h2>What we&apos;re<br />known for.</h2>
                 <p className="lede lede--short">
                   Every dish on our menu comes with the actual recipe. Tap any
                   item to read it.
                 </p>
-              </div>
-
-              <div className="grid grid--4">
-                {featured.map((m) => (
-                  <Link className="card" key={m.id} href={`/menu#${m.slug}`}>
-                    <div
-                      className="card__media poster"
-                      style={{ ["--a" as string]: m.accent }}
-                    >
-                      <span className="card__tag">{rupee(m.price)}</span>
-                      {m.imageUrl ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={m.imageUrl} alt={m.name} loading="lazy" />
-                      ) : (
-                        <>
-                          <span className="poster__steam" />
-                          <span className="poster__ta tamil">{m.tamil}</span>
-                        </>
-                      )}
-                    </div>
-                    <div className="card__body">
-                      <h3>{m.name}</h3>
-                      <p className="card__excerpt">
-                        {m.blurb}
-                      </p>
-                      <span className="mitem__cta">
-                        Read the recipe →
-                      </span>
-                    </div>
+                <p className="grid__after">
+                  <Link className="btn btn--ghost" href="/menu">
+                    Full menu &amp; every recipe →
                   </Link>
-                ))}
+                </p>
               </div>
-
-              <p className="grid__after">
-                <Link className="btn btn--ghost" href="/menu">
-                  Full menu &amp; every recipe →
-                </Link>
-              </p>
-            </div>
+            </ImageStreamHero>
           </section>
         )}
 
